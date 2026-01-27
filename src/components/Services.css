@@ -1,416 +1,375 @@
 :root {
-            --primary: #2c3e50;
-            --accent: #c7956d;
-            --light: #f8f6f3;
-            --dark: #1a1a1a;
-            --text: #333;
-            --text-light: #666;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Work Sans', sans-serif;
-            color: var(--text);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        /* Hero Section */
-        .hero {
-            height: 100vh;
-            background: linear-gradient(135deg, var(--primary) 0%, #34495e 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grid)"/></svg>');
-            opacity: 0.5;
-        }
-
-        .hero-content {
-            text-align: center;
-            color: white;
-            z-index: 1;
-            max-width: 900px;
-            padding: 2rem;
-            animation: fadeInUp 1s ease-out;
-        }
-
-        .hero h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 4.5rem;
-            font-weight: 800;
-            margin-bottom: 1.5rem;
-            letter-spacing: -2px;
-            line-height: 1.1;
-        }
-
-        .hero p {
-            font-size: 1.3rem;
-            font-weight: 300;
-            margin-bottom: 2.5rem;
-            opacity: 0.95;
-        }
-
-        .cta-buttons {
-            display: flex;
-            gap: 1.5rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 1rem 2.5rem;
-            font-size: 1rem;
-            font-weight: 500;
-            text-decoration: none;
-            border-radius: 2px;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-family: 'Work Sans', sans-serif;
-        }
-
-        .btn-primary {
-            background: var(--accent);
-            color: white;
-            border: 2px solid var(--accent);
-        }
-
-        .btn-primary:hover {
-            background: transparent;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(199, 149, 109, 0.3);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: white;
-            border: 2px solid white;
-        }
-
-        .btn-secondary:hover {
-            background: white;
-            color: var(--primary);
-            transform: translateY(-2px);
-        }
-
-        /* Service Section Base */
-        .service-section {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            position: relative;
-            padding: 6rem 0;
-        }
-
-        .service-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 4rem;
-            width: 100%;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 6rem;
-            align-items: center;
-        }
-
-        .service-text h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 3.5rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            line-height: 1.2;
-        }
-
-        .service-number {
-            font-size: 1rem;
-            color: var(--accent);
-            font-weight: 600;
-            letter-spacing: 3px;
-            margin-bottom: 1rem;
-            display: block;
-            text-transform: uppercase;
-        }
-
-        .service-text p {
-            font-size: 1.15rem;
-            line-height: 1.8;
-            margin-bottom: 2rem;
-            color: var(--text-light);
-        }
-
-        .service-features {
-            list-style: none;
-            margin-bottom: 2.5rem;
-        }
-
-        .service-features li {
-            padding: 0.75rem 0;
-            padding-left: 2rem;
-            position: relative;
-            font-size: 1.05rem;
-        }
-
-        .service-features li::before {
-            content: '✓';
-            position: absolute;
-            left: 0;
-            color: var(--accent);
-            font-weight: bold;
-            font-size: 1.2rem;
-        }
-
-        .service-image-container {
-            position: relative;
-            height: 600px;
-        }
-
-        .service-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 4px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-        }
-
-        .image-placeholder {
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 4px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-            font-size: 1.2rem;
-            color: var(--text-light);
-            text-align: center;
-            padding: 2rem;
-        }
-
-        /* Individual Service Styles */
-        .basement-section {
-            background: var(--light);
-        }
-
-        .basement-section h2 {
-            color: var(--primary);
-        }
-
-        .bathroom-section {
-            background: white;
-        }
-
-        .bathroom-section .service-content {
-            grid-template-columns: 1fr 1fr;
-        }
-
-        .bathroom-section .service-text {
-            order: 2;
-        }
-
-        .bathroom-section .service-image-container {
-            order: 1;
-        }
-
-        .bathroom-section h2 {
-            color: #2c5f7f;
-        }
-
-        .kitchen-section {
-            background: #fafaf8;
-        }
-
-        .kitchen-section h2 {
-            color: #8b4513;
-        }
-
-        .living-room-section {
-            background: white;
-        }
-
-        .living-room-section .service-content {
-            grid-template-columns: 1fr 1fr;
-        }
-
-        .living-room-section .service-text {
-            order: 2;
-        }
-
-        .living-room-section .service-image-container {
-            order: 1;
-        }
-
-        .living-room-section h2 {
-            color: #556b2f;
-        }
-
-        .indoor-section {
-            background: var(--light);
-        }
-
-        .indoor-section h2 {
-            color: var(--primary);
-        }
-
-        /* CTA Section */
-        .cta-section {
-            background: linear-gradient(135deg, var(--primary) 0%, #1a252f 100%);
-            padding: 8rem 4rem;
-            text-align: center;
-            color: white;
-        }
-
-        .cta-section h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 3.5rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-        }
-
-        .cta-section p {
-            font-size: 1.3rem;
-            margin-bottom: 3rem;
-            opacity: 0.9;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .contact-info {
-            display: flex;
-            justify-content: center;
-            gap: 4rem;
-            margin-top: 3rem;
-            flex-wrap: wrap;
-        }
-
-        .contact-item {
-            text-align: center;
-        }
-
-        .contact-item h3 {
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 0.5rem;
-            opacity: 0.7;
-        }
-
-        .contact-item p {
-            font-size: 1.5rem;
-            font-weight: 500;
-            margin: 0;
-        }
-
-        .contact-item a {
-            color: var(--accent);
-            text-decoration: none;
-            transition: opacity 0.3s;
-        }
-
-        .contact-item a:hover {
-            opacity: 0.8;
-        }
-
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .fade-in {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-        }
-
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .service-content {
-                grid-template-columns: 1fr;
-                gap: 3rem;
-                padding: 0 2rem;
-            }
-
-            .service-image-container {
-                height: 400px;
-            }
-
-            .bathroom-section .service-text,
-            .living-room-section .service-text {
-                order: 1;
-            }
-
-            .bathroom-section .service-image-container,
-            .living-room-section .service-image-container {
-                order: 2;
-            }
-
-            .hero h1 {
-                font-size: 3rem;
-            }
-
-            .service-text h2 {
-                font-size: 2.5rem;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .hero p {
-                font-size: 1.1rem;
-            }
-
-            .cta-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .btn {
-                width: 100%;
-                max-width: 300px;
-            }
-
-            .service-text h2 {
-                font-size: 2rem;
-            }
-
-            .cta-section h2 {
-                font-size: 2.5rem;
-            }
-
-            .contact-info {
-                gap: 2rem;
-            }
-        }
+    --primary: #2c3e50;
+    --accent: #c7956d;
+    --light: #f8f6f3;
+    --dark: #1a1a1a;
+    --text: #333;
+    --text-light: #666;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Work Sans', sans-serif;
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* Hero Section */
+.hero {
+    height: 90vh; /* Reduced height */
+    background: linear-gradient(135deg, var(--primary) 0%, #34495e 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grid)"/></svg>');
+    opacity: 0.5;
+}
+
+.hero-content {
+    text-align: center;
+    color: white;
+    z-index: 1;
+    max-width: 900px;
+    padding: 2rem;
+    animation: fadeInUp 1s ease-out;
+}
+
+.hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 6vw, 4.5rem); /* Responsive font size */
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    letter-spacing: -2px;
+    line-height: 1.1;
+}
+
+.hero p {
+    font-size: clamp(1rem, 2.5vw, 1.3rem); /* Responsive font size */
+    font-weight: 300;
+    margin-bottom: 2.5rem;
+    opacity: 0.95;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 1rem; /* Reduced gap */
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 0.8rem 2rem; /* Reduced padding */
+    font-size: 0.9rem; /* Reduced font size */
+    font-weight: 500;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: 'Work Sans', sans-serif;
+}
+
+.btn-primary {
+    background: var(--accent);
+    color: white;
+    border: 2px solid var(--accent);
+}
+
+.btn-primary:hover {
+    background: transparent;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(199, 149, 109, 0.3);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+}
+
+.btn-secondary:hover {
+    background: white;
+    color: var(--primary);
+    transform: translateY(-2px);
+}
+
+/* Service Section Base */
+.service-section {
+    padding: 4rem 0; /* Reduced padding */
+    position: relative;
+}
+
+.service-content {
+    max-width: 1200px; /* Reduced max-width */
+    margin: 0 auto;
+    padding: 0 2rem; /* Reduced padding */
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem; /* Reduced gap */
+    align-items: center;
+}
+
+.service-text h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3rem); /* Responsive font size */
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+}
+
+.service-number {
+    font-size: 0.9rem; /* Reduced font size */
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 3px;
+    margin-bottom: 1rem;
+    display: block;
+    text-transform: uppercase;
+}
+
+.service-text p {
+    font-size: 1rem; /* Reduced font size */
+    line-height: 1.8;
+    margin-bottom: 2rem;
+    color: var(--text-light);
+}
+
+.service-features {
+    list-style: none;
+    margin-bottom: 2.5rem;
+    padding: 0;
+}
+
+.service-features li {
+    padding: 0.5rem 0; /* Reduced padding */
+    padding-left: 2rem;
+    position: relative;
+    font-size: 1rem; /* Reduced font size */
+}
+
+.service-features li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.service-image-container {
+    position: relative;
+    width: 100%;
+    height: auto; /* Removed fixed height */
+    aspect-ratio: 4 / 3; /* Added aspect ratio */
+}
+
+.service-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 4px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+}
+
+.image-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    font-size: 1rem; /* Reduced font size */
+    color: var(--text-light);
+    text-align: center;
+    padding: 2rem;
+}
+
+/* Individual Service Styles */
+.basement-section {
+    background: var(--light);
+}
+
+.basement-section h2 {
+    color: var(--primary);
+}
+
+.bathroom-section {
+    background: white;
+}
+
+.bathroom-section .service-text {
+    order: 2;
+}
+
+.bathroom-section .service-image-container {
+    order: 1;
+}
+
+.bathroom-section h2 {
+    color: #2c5f7f;
+}
+
+.kitchen-section {
+    background: #fafaf8;
+}
+
+.kitchen-section h2 {
+    color: #8b4513;
+}
+
+.living-room-section {
+    background: white;
+}
+
+.living-room-section .service-text {
+    order: 2;
+}
+
+.living-room-section .service-image-container {
+    order: 1;
+}
+
+.living-room-section h2 {
+    color: #556b2f;
+}
+
+.indoor-section {
+    background: var(--light);
+}
+
+.indoor-section h2 {
+    color: var(--primary);
+}
+
+/* CTA Section */
+.cta-section {
+    background: linear-gradient(135deg, var(--primary) 0%, #1a252f 100%);
+    padding: 6rem 2rem; /* Adjusted padding */
+    text-align: center;
+    color: white;
+}
+
+.cta-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3rem); /* Responsive font size */
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
+
+.cta-section p {
+    font-size: clamp(1rem, 2.5vw, 1.2rem); /* Responsive font size */
+    margin-bottom: 3rem;
+    opacity: 0.9;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.contact-info {
+    display: flex;
+    justify-content: center;
+    gap: 2rem; /* Reduced gap */
+    margin-top: 3rem;
+    flex-wrap: wrap;
+}
+
+.contact-item {
+    text-align: center;
+}
+
+.contact-item h3 {
+    font-size: 0.8rem; /* Reduced font size */
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 0.5rem;
+    opacity: 0.7;
+}
+
+.contact-item p {
+    font-size: 1.2rem; /* Reduced font size */
+    font-weight: 500;
+    margin: 0;
+}
+
+.contact-item a {
+    color: var(--accent);
+    text-decoration: none;
+    transition: opacity 0.3s;
+}
+
+.contact-item a:hover {
+    opacity: 0.8;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .service-content {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+
+    .bathroom-section .service-text,
+    .living-room-section .service-text {
+        order: 1; /* Reset order */
+    }
+
+    .bathroom-section .service-image-container,
+    .living-room-section .service-image-container {
+        order: 2; /* Reset order */
+    }
+}
+
+@media (max-width: 768px) {
+    .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .btn {
+        width: 100%;
+        max-width: 300px;
+    }
+}
