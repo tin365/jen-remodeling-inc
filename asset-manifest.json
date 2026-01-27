@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/jen-remodeling-inc/static/css/main.c476b99c.css",
+    "main.js": "/jen-remodeling-inc/static/js/main.e08c65a1.js",
+    "static/js/453.8ebb3ae8.chunk.js": "/jen-remodeling-inc/static/js/453.8ebb3ae8.chunk.js",
+    "index.html": "/jen-remodeling-inc/index.html",
+    "main.c476b99c.css.map": "/jen-remodeling-inc/static/css/main.c476b99c.css.map",
+    "main.e08c65a1.js.map": "/jen-remodeling-inc/static/js/main.e08c65a1.js.map",
+    "453.8ebb3ae8.chunk.js.map": "/jen-remodeling-inc/static/js/453.8ebb3ae8.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.c476b99c.css",
+    "static/js/main.e08c65a1.js"
+  ]
+}
