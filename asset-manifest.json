@@ -1,15 +1,13 @@
 {
   "files": {
-    "main.css": "/jen-remodeling-inc/static/css/main.bd56b2c2.css",
-    "main.js": "/jen-remodeling-inc/static/js/main.e08c65a1.js",
-    "static/js/453.8ebb3ae8.chunk.js": "/jen-remodeling-inc/static/js/453.8ebb3ae8.chunk.js",
+    "main.css": "/jen-remodeling-inc/static/css/main.ca1874b4.css",
+    "main.js": "/jen-remodeling-inc/static/js/main.bd3cc884.js",
     "index.html": "/jen-remodeling-inc/index.html",
-    "main.bd56b2c2.css.map": "/jen-remodeling-inc/static/css/main.bd56b2c2.css.map",
-    "main.e08c65a1.js.map": "/jen-remodeling-inc/static/js/main.e08c65a1.js.map",
-    "453.8ebb3ae8.chunk.js.map": "/jen-remodeling-inc/static/js/453.8ebb3ae8.chunk.js.map"
+    "main.ca1874b4.css.map": "/jen-remodeling-inc/static/css/main.ca1874b4.css.map",
+    "main.bd3cc884.js.map": "/jen-remodeling-inc/static/js/main.bd3cc884.js.map"
   },
   "entrypoints": [
-    "static/css/main.bd56b2c2.css",
-    "static/js/main.e08c65a1.js"
+    "static/css/main.ca1874b4.css",
+    "static/js/main.bd3cc884.js"
   ]
 }
