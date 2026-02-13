@@ -178,7 +178,7 @@ function Services() {
                 <h2>Ready to Transform Your Home?</h2>
                 <p>Get a free consultation and estimate today. Let's discuss your vision and bring it to life.</p>
                 <div className="cta-buttons">
-                    <a href="#" className="btn btn-primary">Schedule Free Consultation</a>
+                    <a href="/contact" className="btn btn-primary">Schedule Free Consultation</a>
                 </div>
                 <div className="contact-info">
                     <div className="contact-item">

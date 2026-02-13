@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './Reviews.css';
 
 const Reviews = () => {
-    const [reviews, setReviews] = useState([
+    const [reviews] = useState([
         {
             id: 1,
             name: "Sarah Johnson",
@@ -118,10 +118,39 @@ const Reviews = () => {
     const [userReviews, setUserReviews] = useState([]); // Store user-submitted reviews
     const [helpfulClicks, setHelpfulClicks] = useState({}); // Track which reviews user found helpful
 
+    // Update overall rating
+    const updateOverallRating = useCallback(() => {
+        const allReviews = [...userReviews, ...reviews];
+        const totalRating = allReviews.reduce((sum, review) => sum + review.rating, 0);
+        const avgRating = (totalRating / allReviews.length).toFixed(1);
+
+        // Update stars
+        const overallStars = document.getElementById('overallStars');
+        if (overallStars) {
+            const fullStars = Math.floor(avgRating);
+            const hasHalfStar = avgRating % 1 >= 0.5;
+
+            let starsHTML = '';
+            for (let i = 1; i <= 5; i++) {
+                if (i <= fullStars) {
+                    starsHTML += '★';
+                } else if (i === fullStars + 1 && hasHalfStar) {
+                    starsHTML += '★';
+                } else {
+                    starsHTML += '☆';
+                }
+            }
+            overallStars.innerHTML = starsHTML;
+        }
+    }, [userReviews, reviews]);
+
     useEffect(() => {
         loadReviews(); // Load saved reviews first
-        updateOverallRating();
     }, []);
+
+    useEffect(() => {
+        updateOverallRating();
+    }, [updateOverallRating]);
 
     // Display reviews based on filter
     const displayReviews = () => {
@@ -190,30 +219,6 @@ const Reviews = () => {
         return service.split('-').map(word => 
             word.charAt(0).toUpperCase() + word.slice(1)
         ).join(' ') + ' Remodeling';
-    }
-
-    // Update overall rating
-    const updateOverallRating = () => {
-        const allReviews = [...userReviews, ...reviews];
-        const totalRating = allReviews.reduce((sum, review) => sum + review.rating, 0);
-        const avgRating = (totalRating / allReviews.length).toFixed(1);
-
-        // Update stars
-        const overallStars = document.getElementById('overallStars');
-        const fullStars = Math.floor(avgRating);
-        const hasHalfStar = avgRating % 1 >= 0.5;
-
-        let starsHTML = '';
-        for (let i = 1; i <= 5; i++) {
-            if (i <= fullStars) {
-                starsHTML += '★';
-            } else if (i === fullStars + 1 && hasHalfStar) {
-                starsHTML += '★';
-            } else {
-                starsHTML += '☆';
-            }
-        }
-        overallStars.innerHTML = starsHTML;
     }
 
     // Toggle helpful

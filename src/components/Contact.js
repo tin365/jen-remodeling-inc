@@ -50,7 +50,7 @@ const Contact = () => {
   };
 
   const validatePhone = (phone) => {
-    const re = /^[\d\s\-\(\)]+$/;
+    const re = /^[\d\s\-()]+$/;
     return phone.length >= 10 && re.test(phone);
   };
 
