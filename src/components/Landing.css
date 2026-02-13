@@ -2,7 +2,9 @@
 
 .landing-page {
   min-height: 100vh;
-  background-color: var(--secondary-cream);
+  background-color: #faf8f3;
+  width: 100%;
+  display: block;
 }
 
 /* Hero Section */
@@ -13,8 +15,9 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: linear-gradient(135deg, var(--primary-navy) 0%, #2a3a4a 100%);
+  background: linear-gradient(135deg, #1a2332 0%, #2a3a4a 100%);
   padding: 0 !important;
+  width: 100%;
 }
 
 .hero-background {
@@ -38,23 +41,31 @@
   max-width: 1200px;
   width: 100%;
   padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 90vh;
 }
 
 .hero-text {
   max-width: 800px;
   text-align: center;
   margin: 0 auto;
-  color: var(--white);
+  color: #ffffff;
+  position: relative;
+  z-index: 20;
 }
 
 .hero-headline {
   font-family: 'Merriweather', serif;
   font-size: clamp(2.5rem, 6vw, 4.5rem);
   font-weight: 900;
-  color: var(--white);
+  color: #ffffff;
   margin-bottom: 2rem;
   line-height: 1.2;
   letter-spacing: -1px;
+  position: relative;
+  z-index: 20;
 }
 
 .hero-subtext {
@@ -66,6 +77,8 @@
   max-width: 700px;
   margin-left: auto;
   margin-right: auto;
+  position: relative;
+  z-index: 20;
 }
 
 .hero-buttons {
@@ -73,6 +86,8 @@
   gap: 1.5rem;
   justify-content: center;
   flex-wrap: wrap;
+  position: relative;
+  z-index: 20;
 }
 
 .hero-buttons .btn {

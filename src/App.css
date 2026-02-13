@@ -8,10 +8,12 @@
 main {
   flex: 1;
   min-height: calc(100vh - 160px);
+  width: 100%;
 }
 
 .landing-page {
   width: 100%;
+  min-height: 100vh;
 }
 
 /* Traditional Section Dividers */
