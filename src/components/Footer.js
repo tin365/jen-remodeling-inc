@@ -4,7 +4,9 @@ import './Footer.css';
 function Footer() {
     return (
         <footer className="footer">
-            <p>&copy; 2026 JEN Remodeling Inc. All rights reserved.</p>
+            <div className="footer-container">
+                <p>&copy; 2026 JEN Remodeling Inc. All rights reserved.</p>
+            </div>
         </footer>
     );
 }

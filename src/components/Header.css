@@ -1,26 +1,112 @@
-/* Styles for the Header component */
+/* Traditional Header Styles */
 .header {
-    background-color: #333;
-    color: #fff;
-    padding: 1rem;
-    text-align: center;
+  background-color: var(--primary-navy);
+  color: var(--white);
+  padding: 0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-bottom: 2px solid var(--accent-gold);
+}
+
+.header-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 80px;
 }
 
 .header h1 {
-    margin: 0;
+  font-family: 'Merriweather', serif;
+  font-size: 1.75rem;
+  font-weight: 900;
+  color: var(--white);
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+.header nav {
+  display: flex;
+  align-items: center;
 }
 
 .header nav ul {
-    list-style: none;
-    padding: 0;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 0;
+  align-items: center;
 }
 
 .header nav ul li {
-    display: inline;
-    margin: 0 10px;
+  margin: 0;
+  position: relative;
+}
+
+.header nav ul li::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 20px;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.header nav ul li:last-child::after {
+  display: none;
 }
 
 .header nav ul li a {
-    color: #fff;
-    text-decoration: none;
+  display: block;
+  padding: 1rem 1.5rem;
+  color: var(--white);
+  text-decoration: none;
+  font-family: 'Source Serif Pro', serif;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border-bottom: 2px solid transparent;
+}
+
+.header nav ul li a:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--accent-gold);
+  border-bottom-color: var(--accent-gold);
+}
+
+/* Active Link */
+.header nav ul li a.active {
+  color: var(--accent-gold);
+  border-bottom-color: var(--accent-gold);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header-container {
+    flex-direction: column;
+    height: auto;
+    padding: 1rem;
+  }
+
+  .header h1 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .header nav ul {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .header nav ul li a {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+  }
 }

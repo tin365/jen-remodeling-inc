@@ -1,14 +1,12 @@
 
 
 import React, { useState } from 'react';
-import { ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import './Projects.css';
 
 const Projects = () => {
   const [activeCategory, setActiveCategory] = useState('all');
   const [selectedProject, setSelectedProject] = useState(null);
-  const [sliderPosition, setSliderPosition] = useState(50);
-  const [isDragging, setIsDragging] = useState(false);
 
   // Sample project data - replace with your actual images
   const projects = [
@@ -90,24 +88,6 @@ const Projects = () => {
     ? projects 
     : projects.filter(p => p.category === activeCategory);
 
-  const handleMouseDown = () => setIsDragging(true);
-  const handleMouseUp = () => setIsDragging(false);
-
-  const handleMouseMove = (e) => {
-    if (!isDragging) return;
-    
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const percentage = (x / rect.width) * 100;
-    setSliderPosition(Math.min(Math.max(percentage, 0), 100));
-  };
-
-  const handleTouchMove = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.touches[0].clientX - rect.left;
-    const percentage = (x / rect.width) * 100;
-    setSliderPosition(Math.min(Math.max(percentage, 0), 100));
-  };
 
   return (
     <div className="gallery-page">
@@ -148,7 +128,6 @@ const Projects = () => {
               className="project-card"
               onClick={() => {
                 setSelectedProject(project);
-                setSliderPosition(50);
               }}
               style={{ animationDelay: `${index * 0.1}s` }}
             >
@@ -207,57 +186,30 @@ const Projects = () => {
               <p className="lightbox-description">{selectedProject.description}</p>
             </div>
 
-            {/* Before/After Slider */}
-            <div
-              className="slider-container"
-              onMouseDown={handleMouseDown}
-              onMouseUp={handleMouseUp}
-              onMouseMove={handleMouseMove}
-              onMouseLeave={handleMouseUp}
-              onTouchMove={handleTouchMove}
-            >
-              {/* After Image (Full) */}
-              <img
-                src={selectedProject.after}
-                alt="After"
-                className="slider-image after-image"
-                draggable="false"
-              />
-
-              {/* Before Image (Clipped) */}
-              <div
-                className="before-image-wrapper"
-                style={{ width: `${sliderPosition}%` }}
-              >
+            {/* Before/After Side-by-Side */}
+            <div className="slider-container">
+              {/* Before Image */}
+              <div className="before-image-wrapper">
                 <img
                   src={selectedProject.before}
                   alt="Before"
                   className="slider-image before-image"
-                  style={{ width: `${(100 / sliderPosition) * 100}%` }}
                   draggable="false"
                 />
+                <div className="slider-label before-slider-label">BEFORE</div>
               </div>
 
-              {/* Slider Handle */}
-              <div
-                className="slider-handle"
-                style={{ left: `${sliderPosition}%` }}
-              >
-                <div className="handle-button">
-                  <ChevronLeft size={20} className="chevron-left" />
-                  <ChevronRight size={20} className="chevron-right" />
-                </div>
+              {/* After Image */}
+              <div className="after-image-wrapper">
+                <img
+                  src={selectedProject.after}
+                  alt="After"
+                  className="slider-image after-image"
+                  draggable="false"
+                />
+                <div className="slider-label after-slider-label">AFTER</div>
               </div>
-
-              {/* Before/After Labels */}
-              <div className="slider-label before-slider-label">BEFORE</div>
-              <div className="slider-label after-slider-label">AFTER</div>
             </div>
-
-            {/* Instructions */}
-            <p className="slider-instructions">
-              Drag the slider or tap and slide to compare before and after
-            </p>
           </div>
         </div>
       )}
