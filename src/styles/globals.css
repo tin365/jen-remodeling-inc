@@ -1,0 +1,135 @@
+/* Import Traditional Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Libre+Baskerville:wght@400;700&family=Lora:wght@400;500;600&family=Source+Serif+Pro:wght@400;600;700&display=swap');
+
+/* Global Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Lora', 'Georgia', serif;
+  color: #2c2c2c;
+  background-color: #faf8f3;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Typography Hierarchy */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Merriweather', 'Libre Baskerville', serif;
+  font-weight: 700;
+  color: #1a2332;
+  line-height: 1.3;
+}
+
+h1 {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 900;
+}
+
+h2 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+}
+
+h3 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 700;
+}
+
+p {
+  font-family: 'Lora', 'Georgia', serif;
+  font-size: 1.125rem;
+  line-height: 1.8;
+  color: #4a4a4a;
+}
+
+code {
+  font-family: 'Courier New', monospace;
+}
+
+/* Traditional Color Variables */
+:root {
+  --primary-navy: #1a2332;
+  --primary-green: #2d5016;
+  --secondary-beige: #f5f1eb;
+  --secondary-cream: #faf8f3;
+  --secondary-brown: #8b7355;
+  --accent-gold: #b8860b;
+  --accent-copper: #b87333;
+  --text-dark: #2c2c2c;
+  --text-medium: #4a4a4a;
+  --text-light: #6b6b6b;
+  --border-color: #d4c5b0;
+  --white: #ffffff;
+}
+
+/* Links */
+a {
+  color: var(--accent-copper);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--accent-gold);
+}
+
+/* Buttons Base Styles */
+button {
+  font-family: 'Source Serif Pro', serif;
+  cursor: pointer;
+}
+
+/* Section Dividers */
+section {
+  padding: 5rem 0;
+  position: relative;
+}
+
+section::after {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--border-color), transparent);
+  margin-top: 5rem;
+}
+
+section:last-child::after,
+.landing-hero::after {
+  display: none;
+}
+
+.landing-hero {
+  padding: 0 !important;
+}
+
+/* Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Responsive Images */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* App Container */
+main {
+  flex: 1;
+  min-height: calc(100vh - 160px);
+  width: 100%;
+}
+
+.landing-page {
+  width: 100%;
+  min-height: 100vh;
+}

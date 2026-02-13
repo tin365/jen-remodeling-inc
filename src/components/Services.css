@@ -1,5 +1,10 @@
 /* Traditional Services Page Styles */
 
+.services-page {
+  width: 100%;
+  min-height: 100vh;
+}
+
 /* Hero Section */
 .hero {
   background: linear-gradient(135deg, var(--primary-navy) 0%, #2a3a4a 100%);
@@ -7,6 +12,7 @@
   padding: 8rem 2rem;
   text-align: center;
   position: relative;
+  overflow: hidden;
 }
 
 .hero::before {
@@ -41,6 +47,7 @@
   color: var(--white);
   margin-bottom: 1.5rem;
   line-height: 1.2;
+  animation: fadeInUp 0.8s ease-out;
 }
 
 .hero p {
@@ -49,6 +56,7 @@
   color: rgba(255, 255, 255, 0.95);
   margin-bottom: 2.5rem;
   line-height: 1.8;
+  animation: fadeInUp 0.8s ease-out 0.2s both;
 }
 
 .cta-buttons {
@@ -56,6 +64,7 @@
   gap: 1.5rem;
   justify-content: center;
   flex-wrap: wrap;
+  animation: fadeInUp 0.8s ease-out 0.4s both;
 }
 
 .btn {
@@ -68,6 +77,7 @@
   transition: all 0.3s ease;
   border: 2px solid;
   display: inline-block;
+  cursor: pointer;
 }
 
 .btn-primary {
@@ -98,6 +108,7 @@
 .service-section {
   padding: 6rem 0;
   position: relative;
+  overflow: hidden;
 }
 
 .service-section:nth-child(even) {
@@ -116,6 +127,14 @@
   grid-template-columns: 1fr 1fr;
   gap: 5rem;
   align-items: center;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.service-content.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .service-text {
@@ -169,6 +188,11 @@
   font-size: 1.0625rem;
   color: var(--text-medium);
   line-height: 1.7;
+  transition: transform 0.2s ease;
+}
+
+.service-features li:hover {
+  transform: translateX(5px);
 }
 
 .service-features li::before {
@@ -182,16 +206,17 @@
 
 .service-image-container {
   width: 100%;
-  height: 400px;
+  height: 450px;
   position: relative;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
   border: 3px solid var(--border-color);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.service-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.service-image-container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
 }
 
 .image-placeholder {
@@ -199,14 +224,55 @@
   height: 100%;
   background: linear-gradient(135deg, var(--secondary-beige) 0%, var(--border-color) 100%);
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   font-family: 'Lora', serif;
-  font-size: 1.125rem;
-  color: var(--text-light);
+  color: var(--text-medium);
   text-align: center;
   padding: 2rem;
-  border: 3px solid var(--border-color);
+  position: relative;
+  overflow: hidden;
+}
+
+.image-placeholder::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 70%
+  );
+  animation: shimmer 3s infinite;
+}
+
+.placeholder-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  position: relative;
+  z-index: 1;
+  animation: float 3s ease-in-out infinite;
+}
+
+.placeholder-text {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--primary-navy);
+  margin-bottom: 0.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.placeholder-subtext {
+  font-size: 1rem;
+  color: var(--text-light);
+  position: relative;
+  z-index: 1;
 }
 
 /* Alternating Layout */
@@ -227,6 +293,33 @@
   text-align: center;
   color: var(--white);
   border-top: 3px solid var(--accent-gold);
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      rgba(255, 255, 255, 0.02) 10px,
+      rgba(255, 255, 255, 0.02) 20px
+    );
+  pointer-events: none;
+}
+
+.cta-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
 }
 
 .cta-section h2 {
@@ -249,8 +342,8 @@
 
 .contact-info {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 3rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2rem;
   margin-top: 4rem;
   max-width: 900px;
   margin-left: auto;
@@ -259,9 +352,23 @@
 
 .contact-item {
   text-align: center;
-  padding: 1.5rem;
+  padding: 2rem 1.5rem;
   background-color: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.contact-item:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.contact-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  display: block;
 }
 
 .contact-item h3 {
@@ -285,22 +392,41 @@
 .contact-item a {
   color: var(--white);
   transition: color 0.3s ease;
+  text-decoration: none;
 }
 
 .contact-item a:hover {
   color: var(--accent-gold);
 }
 
-/* Fade In Animation */
-.fade-in {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.fade-in.visible {
-  opacity: 1;
-  transform: translateY(0);
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(100%) translateY(100%) rotate(45deg);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 /* Responsive */
@@ -319,6 +445,10 @@
   .living-room-section .service-image-container {
     order: 2;
   }
+
+  .service-image-container {
+    height: 350px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -328,6 +458,15 @@
 
   .service-section {
     padding: 4rem 0;
+  }
+
+  .service-content {
+    padding: 0 1.5rem;
+    gap: 2.5rem;
+  }
+
+  .service-image-container {
+    height: 300px;
   }
 
   .cta-buttons {
@@ -342,6 +481,40 @@
 
   .contact-info {
     grid-template-columns: 1fr;
-    gap: 2rem;
+    gap: 1.5rem;
+  }
+
+  .contact-item {
+    padding: 1.5rem 1rem;
+  }
+
+  .cta-section {
+    padding: 4rem 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero h1 {
+    font-size: 2rem;
+  }
+
+  .hero p {
+    font-size: 1rem;
+  }
+
+  .service-text h2 {
+    font-size: 1.75rem;
+  }
+
+  .service-image-container {
+    height: 250px;
+  }
+
+  .placeholder-icon {
+    font-size: 3rem;
+  }
+
+  .placeholder-text {
+    font-size: 1.25rem;
   }
 }

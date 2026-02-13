@@ -1,73 +1,103 @@
-# jen-remodeling-inc
-Houses / Residents remodeling.
+# JEN Remodeling Inc - Next.js Website
 
-# Getting Started with Create React App
+A modern, SEO-optimized website for JEN Remodeling Inc built with Next.js 15 and React 19.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 🚀 Features
 
-## Available Scripts
+- **Next.js 15** with App Router
+- **React 19** for modern UI components
+- **SEO Optimized** with metadata API
+- **Server-Side Rendering** for better performance
+- **TypeScript Ready** (optional)
+- **GitHub Pages** deployment support
 
-In the project directory, you can run:
+## 📦 Getting Started
 
-### `npm start`
+### Prerequisites
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- Node.js 18+ 
+- npm or yarn
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Installation
 
-### `npm test`
+1. Install dependencies:
+```bash
+npm install
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+2. Run development server:
+```bash
+npm run dev
+```
 
-### `npm run build`
+3. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 🛠️ Available Scripts
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
+- `npm run export` - Export static site (for GitHub Pages)
+- `npm run deploy` - Deploy to GitHub Pages
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 📁 Project Structure
 
-### `npm run eject`
+```
+jen-remodeling-react/
+├── src/
+│   ├── app/              # Next.js App Router pages
+│   │   ├── layout.tsx     # Root layout with Header/Footer
+│   │   ├── page.tsx       # Home page
+│   │   ├── projects/      # Projects page
+│   │   ├── services/      # Services page
+│   │   ├── reviews/       # Reviews page
+│   │   └── contact/       # Contact page
+│   ├── components/        # React components
+│   │   ├── Header.js
+│   │   ├── Footer.js
+│   │   ├── Landing.js
+│   │   ├── Projects.js
+│   │   ├── Services.js
+│   │   ├── Reviews.js
+│   │   └── Contact.js
+│   └── styles/           # Global styles
+│       └── globals.css
+├── public/               # Static assets
+├── next.config.js        # Next.js configuration
+└── package.json
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## 🎯 Key Improvements from React to Next.js
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+1. **SEO Optimization**: Built-in metadata API for better search engine visibility
+2. **Performance**: Server-side rendering and automatic code splitting
+3. **Routing**: File-based routing (no React Router needed)
+4. **Image Optimization**: Built-in Image component with automatic optimization
+5. **Type Safety**: TypeScript support out of the box
+6. **Better DX**: Improved developer experience with hot reloading
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## 📝 Migration Notes
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- All components now use Next.js `Link` instead of React Router `Link`
+- Components with interactivity marked with `'use client'` directive
+- Routing handled by Next.js App Router file structure
+- SEO metadata added to each page via `metadata` export
 
-## Learn More
+## 🚀 Deployment
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### GitHub Pages
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+1. Update `next.config.js` with your repository name
+2. Run `npm run build` to create static export
+3. Run `npm run deploy` to deploy to GitHub Pages
 
-### Code Splitting
+### Vercel (Recommended)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+1. Push code to GitHub
+2. Import project in Vercel
+3. Deploy automatically on push
 
-### Analyzing the Bundle Size
+## 📄 License
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Private project for JEN Remodeling Inc

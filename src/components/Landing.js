@@ -1,5 +1,7 @@
+'use client'
+
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import './Landing.css';
 
 const Landing = () => {
@@ -19,8 +21,8 @@ const Landing = () => {
               and exceptional service.
             </p>
             <div className="hero-buttons">
-              <Link to="/projects" className="btn btn-primary">View Our Projects</Link>
-              <Link to="/contact" className="btn btn-secondary">Contact Us</Link>
+              <Link href="/projects" className="btn btn-primary">View Our Projects</Link>
+              <Link href="/contact" className="btn btn-secondary">Contact Us</Link>
             </div>
           </div>
         </div>
@@ -114,7 +116,7 @@ const Landing = () => {
                 <span className="project-tag">Custom Cabinets</span>
                 <span className="project-tag">Quartz Countertops</span>
               </div>
-              <Link to="/projects" className="btn btn-primary">View All Projects</Link>
+              <Link href="/projects" className="btn btn-primary">View All Projects</Link>
             </div>
           </div>
         </div>
@@ -160,8 +162,8 @@ const Landing = () => {
               bring your vision to life with quality craftsmanship and exceptional service.
             </p>
             <div className="cta-buttons">
-              <Link to="/contact" className="btn btn-primary">Get Free Consultation</Link>
-              <Link to="/projects" className="btn btn-secondary">View Our Portfolio</Link>
+              <Link href="/contact" className="btn btn-primary">Get Free Consultation</Link>
+              <Link href="/projects" className="btn btn-secondary">View Our Portfolio</Link>
             </div>
             <div className="cta-contact-info">
               <div className="contact-item">

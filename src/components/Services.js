@@ -1,9 +1,14 @@
-import React, { useEffect } from 'react';
+'use client'
+
+import React, { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 import './Services.css';
 
 function Services() {
+    const [visibleSections, setVisibleSections] = useState(new Set());
+    const sectionRefs = useRef([]);
+
     useEffect(() => {
-        // Scroll animation
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -100px 0px'
@@ -12,27 +17,16 @@ function Services() {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
+                    const index = sectionRefs.current.indexOf(entry.target);
+                    if (index !== -1) {
+                        setVisibleSections(prev => new Set([...prev, index]));
+                    }
                 }
             });
         }, observerOptions);
 
-        document.querySelectorAll('.fade-in').forEach(el => {
-            observer.observe(el);
-        });
-
-        // Smooth scroll for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
+        sectionRefs.current.forEach(el => {
+            if (el) observer.observe(el);
         });
 
         return () => {
@@ -40,14 +34,21 @@ function Services() {
         };
     }, []);
 
+    const addToRefs = (el) => {
+        if (el && !sectionRefs.current.includes(el)) {
+            sectionRefs.current.push(el);
+        }
+    };
+
     return (
-        <div>
+        <div className="services-page">
+            {/* Hero Section */}
             <section className="hero">
                 <div className="hero-content">
                     <h1>Transform Your Home</h1>
                     <p>Expert remodeling services for every room in your house. Quality craftsmanship, stunning results.</p>
                     <div className="cta-buttons">
-                        <a href="#contact" className="btn btn-primary">Get Free Estimate</a>
+                        <Link href="/contact" className="btn btn-primary">Get Free Estimate</Link>
                         <a href="tel:+1234567890" className="btn btn-secondary">Call Now</a>
                     </div>
                 </div>
@@ -55,7 +56,7 @@ function Services() {
 
             {/* Basement Remodeling */}
             <section className="service-section basement-section">
-                <div className="service-content fade-in">
+                <div className={`service-content ${visibleSections.has(0) ? 'visible' : ''}`} ref={el => { addToRefs(el); if (el) el.dataset.index = '0'; }}>
                     <div className="service-text">
                         <span className="service-number">01 — Services</span>
                         <h2>Basement Remodeling</h2>
@@ -67,11 +68,13 @@ function Services() {
                             <li>Built-in storage solutions</li>
                             <li>Egress windows and safety compliance</li>
                         </ul>
-                        <a href="#contact" className="btn btn-primary">Start Your Project</a>
+                        <Link href="/contact" className="btn btn-primary">Start Your Project</Link>
                     </div>
                     <div className="service-image-container">
-                        <div className="image-placeholder">
-                            Basement Remodeling<br />Before & After Gallery
+                        <div className="image-placeholder basement-image">
+                            <div className="placeholder-icon">🏠</div>
+                            <div className="placeholder-text">Basement Remodeling</div>
+                            <div className="placeholder-subtext">Before & After Gallery</div>
                         </div>
                     </div>
                 </div>
@@ -79,7 +82,7 @@ function Services() {
 
             {/* Bathroom Remodeling */}
             <section className="service-section bathroom-section">
-                <div className="service-content fade-in">
+                <div className={`service-content ${visibleSections.has(1) ? 'visible' : ''}`} ref={el => { addToRefs(el); if (el) el.dataset.index = '1'; }}>
                     <div className="service-text">
                         <span className="service-number">02 — Services</span>
                         <h2>Bathroom Remodeling</h2>
@@ -91,11 +94,13 @@ function Services() {
                             <li>Tile installation and flooring</li>
                             <li>Modern plumbing and fixtures</li>
                         </ul>
-                        <a href="#contact" className="btn btn-primary">Start Your Project</a>
+                        <Link href="/contact" className="btn btn-primary">Start Your Project</Link>
                     </div>
                     <div className="service-image-container">
-                        <div className="image-placeholder">
-                            Bathroom Remodeling<br />Before & After Gallery
+                        <div className="image-placeholder bathroom-image">
+                            <div className="placeholder-icon">🚿</div>
+                            <div className="placeholder-text">Bathroom Remodeling</div>
+                            <div className="placeholder-subtext">Before & After Gallery</div>
                         </div>
                     </div>
                 </div>
@@ -103,7 +108,7 @@ function Services() {
 
             {/* Kitchen Remodeling */}
             <section className="service-section kitchen-section">
-                <div className="service-content fade-in">
+                <div className={`service-content ${visibleSections.has(2) ? 'visible' : ''}`} ref={el => { addToRefs(el); if (el) el.dataset.index = '2'; }}>
                     <div className="service-text">
                         <span className="service-number">03 — Services</span>
                         <h2>Kitchen Remodeling</h2>
@@ -115,11 +120,13 @@ function Services() {
                             <li>Backsplash and tile work</li>
                             <li>Appliance installation and layout optimization</li>
                         </ul>
-                        <a href="#contact" className="btn btn-primary">Start Your Project</a>
+                        <Link href="/contact" className="btn btn-primary">Start Your Project</Link>
                     </div>
                     <div className="service-image-container">
-                        <div className="image-placeholder">
-                            Kitchen Remodeling<br />Before & After Gallery
+                        <div className="image-placeholder kitchen-image">
+                            <div className="placeholder-icon">🍳</div>
+                            <div className="placeholder-text">Kitchen Remodeling</div>
+                            <div className="placeholder-subtext">Before & After Gallery</div>
                         </div>
                     </div>
                 </div>
@@ -127,7 +134,7 @@ function Services() {
 
             {/* Living Room Remodeling */}
             <section className="service-section living-room-section">
-                <div className="service-content fade-in">
+                <div className={`service-content ${visibleSections.has(3) ? 'visible' : ''}`} ref={el => { addToRefs(el); if (el) el.dataset.index = '3'; }}>
                     <div className="service-text">
                         <span className="service-number">04 — Services</span>
                         <h2>Living Room Remodeling</h2>
@@ -139,11 +146,13 @@ function Services() {
                             <li>Fireplace installation and updates</li>
                             <li>Crown molding and architectural details</li>
                         </ul>
-                        <a href="#contact" className="btn btn-primary">Start Your Project</a>
+                        <Link href="/contact" className="btn btn-primary">Start Your Project</Link>
                     </div>
                     <div className="service-image-container">
-                        <div className="image-placeholder">
-                            Living Room Remodeling<br />Before & After Gallery
+                        <div className="image-placeholder living-room-image">
+                            <div className="placeholder-icon">🛋️</div>
+                            <div className="placeholder-text">Living Room Remodeling</div>
+                            <div className="placeholder-subtext">Before & After Gallery</div>
                         </div>
                     </div>
                 </div>
@@ -151,7 +160,7 @@ function Services() {
 
             {/* Indoor Remodeling & Replacement */}
             <section className="service-section indoor-section">
-                <div className="service-content fade-in">
+                <div className={`service-content ${visibleSections.has(4) ? 'visible' : ''}`} ref={el => { addToRefs(el); if (el) el.dataset.index = '4'; }}>
                     <div className="service-text">
                         <span className="service-number">05 — Services</span>
                         <h2>Complete Indoor Remodeling</h2>
@@ -163,35 +172,42 @@ function Services() {
                             <li>Drywall repair and installation</li>
                             <li>Complete home interior renovations</li>
                         </ul>
-                        <a href="#contact" className="btn btn-primary">Start Your Project</a>
+                        <Link href="/contact" className="btn btn-primary">Start Your Project</Link>
                     </div>
                     <div className="service-image-container">
-                        <div className="image-placeholder">
-                            Indoor Remodeling<br />Before & After Gallery
+                        <div className="image-placeholder indoor-image">
+                            <div className="placeholder-icon">✨</div>
+                            <div className="placeholder-text">Indoor Remodeling</div>
+                            <div className="placeholder-subtext">Before & After Gallery</div>
                         </div>
                     </div>
                 </div>
             </section>
 
             {/* CTA Section */}
-            <section className="cta-section" id="contact">
-                <h2>Ready to Transform Your Home?</h2>
-                <p>Get a free consultation and estimate today. Let's discuss your vision and bring it to life.</p>
-                <div className="cta-buttons">
-                    <a href="/contact" className="btn btn-primary">Schedule Free Consultation</a>
-                </div>
-                <div className="contact-info">
-                    <div className="contact-item">
-                        <h3>Call Us</h3>
-                        <p><a href="tel:+1234567890">(123) 456-7890</a></p>
+            <section className="cta-section">
+                <div className="cta-container">
+                    <h2>Ready to Transform Your Home?</h2>
+                    <p>Get a free consultation and estimate today. Let's discuss your vision and bring it to life.</p>
+                    <div className="cta-buttons">
+                        <Link href="/contact" className="btn btn-primary">Schedule Free Consultation</Link>
                     </div>
-                    <div className="contact-item">
-                        <h3>Email</h3>
-                        <p><a href="mailto:info@yourremodeling.com">info@yourremodeling.com</a></p>
-                    </div>
-                    <div className="contact-item">
-                        <h3>Hours</h3>
-                        <p>Mon-Fri: 8AM - 6PM</p>
+                    <div className="contact-info">
+                        <div className="contact-item">
+                            <div className="contact-icon">📞</div>
+                            <h3>Call Us</h3>
+                            <p><a href="tel:+1234567890">(123) 456-7890</a></p>
+                        </div>
+                        <div className="contact-item">
+                            <div className="contact-icon">✉️</div>
+                            <h3>Email</h3>
+                            <p><a href="mailto:info@jenremodeling.com">info@jenremodeling.com</a></p>
+                        </div>
+                        <div className="contact-item">
+                            <div className="contact-icon">🕐</div>
+                            <h3>Hours</h3>
+                            <p>Mon-Fri: 8AM - 6PM</p>
+                        </div>
                     </div>
                 </div>
             </section>

@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
+'use client'
+
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import './Reviews.css';
 
 const Reviews = () => {
@@ -115,226 +117,181 @@ const Reviews = () => {
 
     const [currentFilter, setCurrentFilter] = useState('all');
     const [displayedReviews, setDisplayedReviews] = useState(6);
-    const [userReviews, setUserReviews] = useState([]); // Store user-submitted reviews
-    const [helpfulClicks, setHelpfulClicks] = useState({}); // Track which reviews user found helpful
+    const [userReviews, setUserReviews] = useState([]);
+    const [helpfulClicks, setHelpfulClicks] = useState({});
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [formData, setFormData] = useState({
+        name: '',
+        service: '',
+        rating: 0,
+        text: ''
+    });
+    const [showSuccess, setShowSuccess] = useState(false);
+    const modalRef = useRef(null);
 
-    // Update overall rating
-    const updateOverallRating = useCallback(() => {
+    // Calculate overall rating
+    const calculateOverallRating = useCallback(() => {
         const allReviews = [...userReviews, ...reviews];
+        if (allReviews.length === 0) return { avg: 4.9, total: 127 };
         const totalRating = allReviews.reduce((sum, review) => sum + review.rating, 0);
         const avgRating = (totalRating / allReviews.length).toFixed(1);
-
-        // Update stars
-        const overallStars = document.getElementById('overallStars');
-        if (overallStars) {
-            const fullStars = Math.floor(avgRating);
-            const hasHalfStar = avgRating % 1 >= 0.5;
-
-            let starsHTML = '';
-            for (let i = 1; i <= 5; i++) {
-                if (i <= fullStars) {
-                    starsHTML += '★';
-                } else if (i === fullStars + 1 && hasHalfStar) {
-                    starsHTML += '★';
-                } else {
-                    starsHTML += '☆';
-                }
-            }
-            overallStars.innerHTML = starsHTML;
-        }
+        return { avg: parseFloat(avgRating), total: allReviews.length };
     }, [userReviews, reviews]);
 
-    useEffect(() => {
-        loadReviews(); // Load saved reviews first
-    }, []);
+    const overallRating = calculateOverallRating();
 
-    useEffect(() => {
-        updateOverallRating();
-    }, [updateOverallRating]);
-
-    // Display reviews based on filter
-    const displayReviews = () => {
-        const allReviews = [...userReviews, ...reviews];
-        
-        let filteredReviews = currentFilter === 'all' 
-            ? allReviews 
-            : allReviews.filter(review => review.service === currentFilter);
-
-        const reviewsToShow = filteredReviews.slice(0, displayedReviews);
-        
-        return reviewsToShow.map((review, index) => createReviewCard(review, index));
-    }
-
-    // Create review card element
-    const createReviewCard = (review, index) => {
-        const initials = review.name.split(' ').map(n => n[0]).join('');
-        const formattedDate = formatDate(review.date);
-        const stars = generateStars(review.rating);
-
-        return (
-            <div key={review.id} className="review-card" style={{ animationDelay: `${index * 0.1}s` }}>
-                <div className="review-header">
-                    <div className="reviewer-info">
-                        <div className="reviewer-avatar">{initials}</div>
-                        <div className="reviewer-details">
-                            <h4>{review.name}</h4>
-                            <span className="review-date">{formattedDate}</span>
-                        </div>
-                    </div>
-                    <div className="review-rating">{stars}</div>
-                </div>
-                <span className="review-service-tag">{formatServiceName(review.service)}</span>
-                <p className="review-text">{review.text}</p>
-                <div className="review-helpful">
-                    <button className={`helpful-btn ${helpfulClicks[review.id] ? 'clicked' : ''}`} onClick={() => toggleHelpful(review.id)}>
-                        👍 Helpful ({review.helpful + (helpfulClicks[review.id] ? 1 : 0)})
-                    </button>
-                </div>
-            </div>
-        );
-    }
-
-    // Generate star HTML
+    // Generate stars component
     const generateStars = (rating) => {
-        let starsHTML = '';
-        for (let i = 1; i <= 5; i++) {
-            if (i <= rating) {
-                starsHTML += '★';
-            } else {
-                starsHTML += '☆';
-            }
-        }
-        return starsHTML;
-    }
+        return Array.from({ length: 5 }, (_, i) => (
+            <span key={i} className={i < rating ? 'star-filled' : 'star-empty'}>
+                {i < rating ? '★' : '☆'}
+            </span>
+        ));
+    };
 
     // Format date
     const formatDate = (dateString) => {
         const date = new Date(dateString);
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
         return date.toLocaleDateString('en-US', options);
-    }
+    };
 
     // Format service name
     const formatServiceName = (service) => {
         return service.split('-').map(word => 
             word.charAt(0).toUpperCase() + word.slice(1)
         ).join(' ') + ' Remodeling';
-    }
+    };
 
     // Toggle helpful
     const toggleHelpful = (reviewId) => {
-        if (helpfulClicks[reviewId]) {
-            const newHelpfulClicks = { ...helpfulClicks };
-            delete newHelpfulClicks[reviewId];
-            setHelpfulClicks(newHelpfulClicks);
-        } else {
-            setHelpfulClicks({ ...helpfulClicks, [reviewId]: true });
-        }
-    }
+        setHelpfulClicks(prev => {
+            if (prev[reviewId]) {
+                const newClicks = { ...prev };
+                delete newClicks[reviewId];
+                return newClicks;
+            }
+            return { ...prev, [reviewId]: true };
+        });
+    };
 
     // Modal functions
     const openModal = () => {
-        document.getElementById('reviewModal').classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
+        setIsModalOpen(true);
+        if (typeof document !== 'undefined') {
+            document.body.style.overflow = 'hidden';
+        }
+    };
 
     const closeModal = () => {
-        document.getElementById('reviewModal').classList.remove('active');
-        document.body.style.overflow = 'auto';
+        setIsModalOpen(false);
         resetForm();
-    }
+        if (typeof document !== 'undefined') {
+            document.body.style.overflow = 'auto';
+        }
+    };
 
     const resetForm = () => {
-        document.getElementById('reviewForm').reset();
-        document.getElementById('ratingValue').value = '';
-        highlightStars(0);
-    }
-
-    // Star rating functions
-    const updateStarRating = (rating) => {
-        highlightStars(rating);
-    }
-
-    const highlightStars = (rating) => {
-        const stars = document.querySelectorAll('.star-rating-input .star');
-        stars.forEach((star, index) => {
-            if (index < rating) {
-                star.classList.add('active');
-            } else {
-                star.classList.remove('active');
-            }
+        setFormData({
+            name: '',
+            service: '',
+            rating: 0,
+            text: ''
         });
-    }
+    };
+
+    // Handle form input changes
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    // Handle star rating click
+    const handleStarClick = (rating) => {
+        setFormData(prev => ({
+            ...prev,
+            rating: rating
+        }));
+    };
 
     // Submit review
-    const submitReview = () => {
-        const name = document.getElementById('reviewerName').value;
-        const service = document.getElementById('reviewService').value;
-        const rating = parseInt(document.getElementById('ratingValue').value);
-        const text = document.getElementById('reviewText').value;
+    const handleSubmit = (e) => {
+        e.preventDefault();
 
-        if (!rating) {
+        if (!formData.rating) {
             alert('Please select a rating');
             return;
         }
 
         const newReview = {
             id: Date.now(),
-            name: name,
-            service: service,
-            rating: rating,
+            name: formData.name,
+            service: formData.service,
+            rating: formData.rating,
             date: new Date().toISOString().split('T')[0],
-            text: text,
+            text: formData.text,
             helpful: 0
         };
 
-        setUserReviews([newReview, ...userReviews]);
+        const updatedReviews = [newReview, ...userReviews];
+        setUserReviews(updatedReviews);
+        setShowSuccess(true);
         
-        // Show success message
-        showSuccessMessage();
-        
-        // Save and close modal
+        // Save to localStorage
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('userReviews', JSON.stringify(updatedReviews));
+        }
+
+        // Reset and close after delay
         setTimeout(() => {
-            saveReviews();
+            setShowSuccess(false);
             closeModal();
             setDisplayedReviews(6);
-            updateOverallRating();
         }, 1500);
-    }
-
-    // Show success message
-    const showSuccessMessage = () => {
-        const form = document.getElementById('reviewForm');
-        const successMsg = document.createElement('div');
-        successMsg.className = 'success-message';
-        successMsg.textContent = '✓ Thank you! Your review has been submitted successfully.';
-        
-        form.parentElement.insertBefore(successMsg, form);
-        
-        setTimeout(() => {
-            successMsg.remove();
-        }, 3000);
-    }
-
-    // Save reviews to localStorage
-    const saveReviews = () => {
-        localStorage.setItem('userReviews', JSON.stringify(userReviews));
-        localStorage.setItem('helpfulClicks', JSON.stringify(helpfulClicks));
-    }
+    };
 
     // Load reviews from localStorage
-    const loadReviews = () => {
-        const savedReviews = localStorage.getItem('userReviews');
-        const savedHelpful = localStorage.getItem('helpfulClicks');
-        
-        if (savedReviews) {
-            setUserReviews(JSON.parse(savedReviews));
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const savedReviews = localStorage.getItem('userReviews');
+            const savedHelpful = localStorage.getItem('helpfulClicks');
+            
+            if (savedReviews) {
+                try {
+                    setUserReviews(JSON.parse(savedReviews));
+                } catch (e) {
+                    console.error('Error loading reviews:', e);
+                }
+            }
+            
+            if (savedHelpful) {
+                try {
+                    setHelpfulClicks(JSON.parse(savedHelpful));
+                } catch (e) {
+                    console.error('Error loading helpful clicks:', e);
+                }
+            }
         }
-        
-        if (savedHelpful) {
-            setHelpfulClicks(JSON.parse(savedHelpful));
+    }, []);
+
+    // Save helpful clicks to localStorage
+    useEffect(() => {
+        if (typeof window !== 'undefined' && Object.keys(helpfulClicks).length > 0) {
+            localStorage.setItem('helpfulClicks', JSON.stringify(helpfulClicks));
         }
-    }
+    }, [helpfulClicks]);
+
+    // Filter and display reviews
+    const allReviews = [...userReviews, ...reviews];
+    const filteredReviews = currentFilter === 'all' 
+        ? allReviews 
+        : allReviews.filter(review => review.service === currentFilter);
+    
+    const reviewsToShow = filteredReviews.slice(0, displayedReviews);
+    const hasMore = filteredReviews.length > displayedReviews;
 
     return (
         <div>
@@ -349,48 +306,133 @@ const Reviews = () => {
 
                     {/* Overall Rating */}
                     <div className="overall-rating">
-                        <div className="rating-stars" id="overallStars"></div>
+                        <div className="rating-stars">
+                            {generateStars(Math.floor(overallRating.avg))}
+                        </div>
                         <div className="rating-text">
-                            <span className="rating-number" id="averageRating">4.9</span>
-                            <span className="rating-label">out of 5 based on <span id="totalReviews">127</span> reviews</span>
+                            <span className="rating-number">{overallRating.avg}</span>
+                            <span className="rating-label">out of 5 based on <span>{overallRating.total}</span> reviews</span>
                         </div>
                     </div>
 
                     {/* Filter Buttons */}
                     <div className="filter-section">
-                        <button className="filter-btn active" data-filter="all" onClick={() => { setCurrentFilter('all'); setDisplayedReviews(6); }}>All Reviews</button>
-                        <button className="filter-btn" data-filter="basement" onClick={() => { setCurrentFilter('basement'); setDisplayedReviews(6); }}>Basement</button>
-                        <button className="filter-btn" data-filter="kitchen" onClick={() => { setCurrentFilter('kitchen'); setDisplayedReviews(6); }}>Kitchen</button>
-                        <button className="filter-btn" data-filter="bathroom" onClick={() => { setCurrentFilter('bathroom'); setDisplayedReviews(6); }}>Bathroom</button>
-                        <button className="filter-btn" data-filter="living-room" onClick={() => { setCurrentFilter('living-room'); setDisplayedReviews(6); }}>Living Room</button>
+                        <button 
+                            className={`filter-btn ${currentFilter === 'all' ? 'active' : ''}`}
+                            onClick={() => { setCurrentFilter('all'); setDisplayedReviews(6); }}
+                        >
+                            All Reviews
+                        </button>
+                        <button 
+                            className={`filter-btn ${currentFilter === 'basement' ? 'active' : ''}`}
+                            onClick={() => { setCurrentFilter('basement'); setDisplayedReviews(6); }}
+                        >
+                            Basement
+                        </button>
+                        <button 
+                            className={`filter-btn ${currentFilter === 'kitchen' ? 'active' : ''}`}
+                            onClick={() => { setCurrentFilter('kitchen'); setDisplayedReviews(6); }}
+                        >
+                            Kitchen
+                        </button>
+                        <button 
+                            className={`filter-btn ${currentFilter === 'bathroom' ? 'active' : ''}`}
+                            onClick={() => { setCurrentFilter('bathroom'); setDisplayedReviews(6); }}
+                        >
+                            Bathroom
+                        </button>
+                        <button 
+                            className={`filter-btn ${currentFilter === 'living-room' ? 'active' : ''}`}
+                            onClick={() => { setCurrentFilter('living-room'); setDisplayedReviews(6); }}
+                        >
+                            Living Room
+                        </button>
                     </div>
 
                     {/* Reviews Grid */}
-                    <div className="reviews-grid" id="reviewsGrid">
-                        {displayReviews()}
+                    <div className="reviews-grid">
+                        {reviewsToShow.map((review, index) => {
+                            const initials = review.name.split(' ').map(n => n[0]).join('');
+                            const formattedDate = formatDate(review.date);
+                            const isHelpful = helpfulClicks[review.id];
+
+                            return (
+                                <div key={review.id} className="review-card" style={{ animationDelay: `${index * 0.1}s` }}>
+                                    <div className="review-header">
+                                        <div className="reviewer-info">
+                                            <div className="reviewer-avatar">{initials}</div>
+                                            <div className="reviewer-details">
+                                                <h4>{review.name}</h4>
+                                                <span className="review-date">{formattedDate}</span>
+                                            </div>
+                                        </div>
+                                        <div className="review-rating">
+                                            {generateStars(review.rating)}
+                                        </div>
+                                    </div>
+                                    <span className="review-service-tag">{formatServiceName(review.service)}</span>
+                                    <p className="review-text">{review.text}</p>
+                                    <div className="review-helpful">
+                                        <button 
+                                            className={`helpful-btn ${isHelpful ? 'clicked' : ''}`}
+                                            onClick={() => toggleHelpful(review.id)}
+                                        >
+                                            👍 Helpful ({review.helpful + (isHelpful ? 1 : 0)})
+                                        </button>
+                                    </div>
+                                </div>
+                            );
+                        })}
                     </div>
 
                     {/* Load More Button */}
-                    <div className="load-more-container">
-                        <button className="load-more-btn" id="loadMoreBtn" onClick={() => setDisplayedReviews(displayedReviews + 6)}>Load More Reviews</button>
-                    </div>
+                    {hasMore && (
+                        <div className="load-more-container">
+                            <button 
+                                className="load-more-btn"
+                                onClick={() => setDisplayedReviews(displayedReviews + 6)}
+                            >
+                                Load More Reviews
+                            </button>
+                        </div>
+                    )}
                 </div>
             </section>
 
             {/* Write Review Modal */}
-            <div className="modal" id="reviewModal">
+            <div className={`modal ${isModalOpen ? 'active' : ''}`} ref={modalRef}>
                 <div className="modal-content">
-                    <button className="modal-close" id="closeModal" onClick={closeModal}>&times;</button>
+                    <button className="modal-close" onClick={closeModal}>&times;</button>
                     <h2 className="modal-title">Write a Review</h2>
-                    <form id="reviewForm" onSubmit={(e) => { e.preventDefault(); submitReview(); }}>
+                    
+                    {showSuccess && (
+                        <div className="success-message">
+                            ✓ Thank you! Your review has been submitted successfully.
+                        </div>
+                    )}
+
+                    <form onSubmit={handleSubmit}>
                         <div className="form-group">
                             <label htmlFor="reviewerName">Your Name *</label>
-                            <input type="text" id="reviewerName" required />
+                            <input 
+                                type="text" 
+                                id="reviewerName"
+                                name="name"
+                                value={formData.name}
+                                onChange={handleInputChange}
+                                required 
+                            />
                         </div>
 
                         <div className="form-group">
                             <label htmlFor="reviewService">Service Type *</label>
-                            <select id="reviewService" required>
+                            <select 
+                                id="reviewService"
+                                name="service"
+                                value={formData.service}
+                                onChange={handleInputChange}
+                                required
+                            >
                                 <option value="">Select a service</option>
                                 <option value="basement">Basement Remodeling</option>
                                 <option value="kitchen">Kitchen Remodeling</option>
@@ -402,19 +444,30 @@ const Reviews = () => {
 
                         <div className="form-group">
                             <label>Your Rating *</label>
-                            <div className="star-rating-input" id="starRatingInput">
-                                <span className="star" data-rating="1" onClick={() => updateStarRating(1)}>★</span>
-                                <span className="star" data-rating="2" onClick={() => updateStarRating(2)}>★</span>
-                                <span className="star" data-rating="3" onClick={() => updateStarRating(3)}>★</span>
-                                <span className="star" data-rating="4" onClick={() => updateStarRating(4)}>★</span>
-                                <span className="star" data-rating="5" onClick={() => updateStarRating(5)}>★</span>
+                            <div className="star-rating-input">
+                                {[1, 2, 3, 4, 5].map((rating) => (
+                                    <span
+                                        key={rating}
+                                        className={`star ${formData.rating >= rating ? 'active' : ''}`}
+                                        onClick={() => handleStarClick(rating)}
+                                    >
+                                        ★
+                                    </span>
+                                ))}
                             </div>
-                            <input type="hidden" id="ratingValue" required />
                         </div>
 
                         <div className="form-group">
                             <label htmlFor="reviewText">Your Review *</label>
-                            <textarea id="reviewText" rows="5" required placeholder="Tell us about your experience..."></textarea>
+                            <textarea 
+                                id="reviewText"
+                                name="text"
+                                value={formData.text}
+                                onChange={handleInputChange}
+                                rows={5}
+                                required
+                                placeholder="Tell us about your experience..."
+                            />
                         </div>
 
                         <button type="submit" className="submit-btn">Submit Review</button>
@@ -423,7 +476,7 @@ const Reviews = () => {
             </div>
 
             {/* Floating Write Review Button */}
-            <button className="floating-btn" id="writeReviewBtn" onClick={openModal}>
+            <button className="floating-btn" onClick={openModal}>
                 <span className="btn-icon">✍️</span>
                 <span className="btn-text">Write a Review</span>
             </button>
