@@ -10,7 +10,7 @@
     "lint": "next lint",
     "export": "next build",
     "predeploy": "npm run build",
-    "deploy": "node -e \"require('fs').writeFileSync('out/.nojekyll', '')\" && gh-pages -d out"
+    "deploy": "npm run build && node -e \"require('fs').writeFileSync('out/.nojekyll', '')\" && gh-pages -d out"
   },
   "dependencies": {
     "lucide-react": "^0.563.0",
