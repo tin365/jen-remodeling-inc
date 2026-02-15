@@ -1,6 +1,6 @@
 const repo = 'jen-remodeling-inc'
 const basePath = process.env.NODE_ENV === 'production' ? `/${repo}` : ''
-// Path-only prefix so assets load from current origin (works on GH Pages and local preview)
+// Path-only (not full URL): assets load from current origin → works on GH Pages and npm run start
 const assetPrefix = basePath ? `${basePath}/` : ''
 
 /** @type {import('next').NextConfig} */
