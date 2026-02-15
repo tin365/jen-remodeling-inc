@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
+import { supabase } from '@/lib/supabase'
 
 interface ContactFormData {
   name: string
@@ -62,6 +63,7 @@ const timelines = [
 export default function Contact() {
   const [formData, setFormData] = useState<ContactFormData>(initialFormData)
   const [errors, setErrors] = useState<FormErrors>({})
+  const [submitError, setSubmitError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitSuccess, setSubmitSuccess] = useState(false)
 
@@ -97,19 +99,34 @@ export default function Contact() {
     }
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!validateForm()) return
+    setSubmitError(null)
     setIsSubmitting(true)
-    setTimeout(() => {
-      console.log('Form submitted:', formData)
-      setIsSubmitting(false)
+    try {
+      const { error } = await supabase.from('contact_submissions').insert({
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone.trim(),
+        preferred_contact: formData.preferredContact,
+        service: formData.service,
+        project_type: formData.projectType || null,
+        budget: formData.budget || null,
+        timeline: formData.timeline || null,
+        message: formData.message.trim(),
+      })
+      if (error) throw error
       setSubmitSuccess(true)
-      setTimeout(() => {
-        setFormData(initialFormData)
-        setSubmitSuccess(false)
-      }, 3000)
-    }, 1500)
+      setSubmitError(null)
+      setFormData(initialFormData)
+      setErrors({})
+      setTimeout(() => setSubmitSuccess(false), 3000)
+    } catch (err) {
+      setSubmitError('Failed to send. Please try again or call us.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const inputBase = 'w-full p-2 border font-[inherit] text-[0.95rem] bg-paper focus:outline-none focus:border-ink'
@@ -163,6 +180,11 @@ export default function Contact() {
               </p>
             </div>
 
+            {submitError && (
+              <div className="bg-ink/10 border border-ink text-ink p-4 mb-6 text-center" role="alert">
+                {submitError}
+              </div>
+            )}
             {submitSuccess && (
               <div className="bg-ink text-paper p-6 mb-6 text-center">
                 <div className="w-10 h-10 bg-paper text-ink flex items-center justify-center text-xl font-bold mx-auto mb-3">✓</div>

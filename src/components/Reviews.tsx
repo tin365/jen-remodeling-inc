@@ -1,11 +1,12 @@
 'use client'
 
 import React, { useState, useEffect, useCallback, useRef } from 'react'
+import { supabase } from '@/lib/supabase'
 
 type ReviewService = 'basement' | 'kitchen' | 'bathroom' | 'living-room' | 'other'
 
 interface Review {
-  id: number
+  id: string
   name: string
   service: ReviewService
   rating: number
@@ -21,21 +22,6 @@ interface ReviewFormData {
   text: string
 }
 
-const INITIAL_REVIEWS: Review[] = [
-  { id: 1, name: 'Sarah Johnson', service: 'kitchen', rating: 5, date: '2025-01-15', text: 'Absolutely amazing transformation! Our kitchen went from outdated to stunning. The team was professional, punctual, and the attention to detail was exceptional. Highly recommend!', helpful: 24 },
-  { id: 2, name: 'Michael Chen', service: 'basement', rating: 5, date: '2025-01-10', text: "We couldn't be happier with our new basement entertainment room. They turned an unused space into the heart of our home. The quality of work exceeded our expectations.", helpful: 18 },
-  { id: 3, name: 'Emily Rodriguez', service: 'bathroom', rating: 5, date: '2025-01-05', text: "Our master bathroom is now a spa-like retreat. The team was incredibly responsive and worked within our budget. They helped us choose materials and the result is breathtaking!", helpful: 31 },
-  { id: 4, name: 'David Thompson', service: 'living-room', rating: 4, date: '2024-12-28', text: 'Great experience overall. The living room remodel opened up our space beautifully. Minor delays due to material shortages, but they kept us informed every step of the way.', helpful: 12 },
-  { id: 5, name: 'Jennifer Martinez', service: 'kitchen', rating: 5, date: '2024-12-20', text: 'From design to completion, everything was seamless. Our new kitchen is functional and gorgeous. The custom cabinets are exactly what we wanted!', helpful: 27 },
-  { id: 6, name: 'Robert Williams', service: 'basement', rating: 5, date: '2024-12-15', text: 'Converted our basement into a home office and guest suite. The craftsmanship is top-notch. Very satisfied with the entire process and would definitely hire again.', helpful: 15 },
-  { id: 7, name: 'Lisa Anderson', service: 'bathroom', rating: 4, date: '2024-12-10', text: "Beautiful bathroom renovation. The walk-in shower is perfect. Only giving 4 stars because it took a week longer than expected, but the quality makes up for it.", helpful: 9 },
-  { id: 8, name: 'James Parker', service: 'kitchen', rating: 5, date: '2024-12-05', text: "Incredible work! They completely transformed our dated kitchen. The quartz countertops and modern fixtures are stunning. Professional team from start to finish.", helpful: 22 },
-  { id: 9, name: 'Amanda White', service: 'living-room', rating: 5, date: '2024-11-28', text: "Our living room looks like it's from a magazine! The built-in entertainment center and new hardwood floors are perfect. Couldn't be happier!", helpful: 19 },
-  { id: 10, name: 'Christopher Lee', service: 'basement', rating: 4, date: '2024-11-20', text: 'Good quality work on our basement finishing. The space is much more usable now. Team was friendly and cleaned up well after each day. Would recommend.', helpful: 11 },
-  { id: 11, name: 'Michelle Taylor', service: 'bathroom', rating: 5, date: '2024-11-15', text: 'Absolutely love our new bathroom! The tile work is flawless and the dual vanities are exactly what we needed. Very professional and respectful of our home.', helpful: 16 },
-  { id: 12, name: 'Daniel Brown', service: 'kitchen', rating: 5, date: '2024-11-10', text: "Best decision we made was hiring this team for our kitchen remodel. They listened to our needs and delivered beyond expectations. The island is the centerpiece of our home now!", helpful: 25 },
-]
-
 const initialFormData: ReviewFormData = {
   name: '',
   service: '',
@@ -44,23 +30,22 @@ const initialFormData: ReviewFormData = {
 }
 
 export default function Reviews() {
-  const [reviews] = useState<Review[]>(INITIAL_REVIEWS)
+  const [reviews, setReviews] = useState<Review[]>([])
+  const [loading, setLoading] = useState(true)
   const [currentFilter, setCurrentFilter] = useState<'all' | ReviewService>('all')
   const [displayedReviews, setDisplayedReviews] = useState(6)
-  const [userReviews, setUserReviews] = useState<Review[]>([])
-  const [helpfulClicks, setHelpfulClicks] = useState<Record<number, boolean>>({})
+  const [helpfulClicks, setHelpfulClicks] = useState<Record<string, boolean>>({})
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [formData, setFormData] = useState<ReviewFormData>(initialFormData)
   const [showSuccess, setShowSuccess] = useState(false)
   const modalRef = useRef<HTMLDivElement>(null)
 
   const calculateOverallRating = useCallback(() => {
-    const allReviews = [...userReviews, ...reviews]
-    if (allReviews.length === 0) return { avg: 4.9, total: 127 }
-    const totalRating = allReviews.reduce((sum, review) => sum + review.rating, 0)
-    const avgRating = (totalRating / allReviews.length).toFixed(1)
-    return { avg: parseFloat(avgRating), total: allReviews.length }
-  }, [userReviews, reviews])
+    if (reviews.length === 0) return { avg: 0, total: 0 }
+    const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0)
+    const avgRating = (totalRating / reviews.length).toFixed(1)
+    return { avg: parseFloat(avgRating), total: reviews.length }
+  }, [reviews])
 
   const overallRating = calculateOverallRating()
 
@@ -82,7 +67,7 @@ export default function Reviews() {
     return service.split('-').map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') + ' Remodeling'
   }
 
-  const toggleHelpful = (reviewId: number) => {
+  const toggleHelpful = (reviewId: string) => {
     setHelpfulClicks((prev) => {
       if (prev[reviewId]) {
         const next = { ...prev }
@@ -117,45 +102,76 @@ export default function Reviews() {
     setFormData((prev) => ({ ...prev, rating }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const fetchReviews = useCallback(async () => {
+    const { data, error } = await supabase
+      .from('reviews')
+      .select('id, name, service, rating, "text", helpful, created_at')
+      .order('created_at', { ascending: false })
+    if (error) {
+      console.error('Error fetching reviews:', error.message, error)
+      return
+    }
+    const mapped: Review[] = (data ?? []).map((r) => ({
+      id: r.id,
+      name: r.name,
+      service: r.service as ReviewService,
+      rating: r.rating,
+      date: r.created_at.split('T')[0],
+      text: r.text,
+      helpful: r.helpful ?? 0,
+    }))
+    setReviews(mapped)
+  }, [])
+
+  useEffect(() => {
+    fetchReviews().finally(() => setLoading(false))
+  }, [fetchReviews])
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!formData.rating) {
       alert('Please select a rating')
       return
     }
-    const newReview: Review = {
-      id: Date.now(),
-      name: formData.name,
-      service: formData.service as ReviewService,
-      rating: formData.rating,
-      date: new Date().toISOString().split('T')[0],
-      text: formData.text,
-      helpful: 0,
-    }
-    const updatedReviews = [newReview, ...userReviews]
-    setUserReviews(updatedReviews)
-    setShowSuccess(true)
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('userReviews', JSON.stringify(updatedReviews))
-    }
-    setTimeout(() => {
-      setShowSuccess(false)
+    try {
+      const { data, error } = await supabase
+        .from('reviews')
+        .insert({
+          name: formData.name.trim(),
+          service: formData.service,
+          rating: formData.rating,
+          text: formData.text.trim(),
+        })
+        .select('id, name, service, rating, "text", helpful, created_at')
+        .single()
+      if (error) throw error
+      const newReview: Review = {
+        id: data.id,
+        name: data.name,
+        service: data.service as ReviewService,
+        rating: data.rating,
+        date: data.created_at.split('T')[0],
+        text: data.text,
+        helpful: data.helpful ?? 0,
+      }
+      setReviews((prev) => [newReview, ...prev])
+      setShowSuccess(true)
       closeModal()
+      setFormData(initialFormData)
       setDisplayedReviews(6)
-    }, 1500)
+      setTimeout(() => setShowSuccess(false), 1500)
+    } catch (err) {
+      const message = err && typeof err === 'object' && 'message' in err ? String((err as { message: string }).message) : ''
+      if (process.env.NODE_ENV === 'development' && message) {
+        console.error('Error submitting review:', message, err)
+      }
+      alert(message ? `Failed to submit review: ${message}` : 'Failed to submit review. Please try again.')
+    }
   }
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const savedReviews = localStorage.getItem('userReviews')
       const savedHelpful = localStorage.getItem('helpfulClicks')
-      if (savedReviews) {
-        try {
-          setUserReviews(JSON.parse(savedReviews))
-        } catch (e) {
-          console.error('Error loading reviews:', e)
-        }
-      }
       if (savedHelpful) {
         try {
           setHelpfulClicks(JSON.parse(savedHelpful))
@@ -172,13 +188,13 @@ export default function Reviews() {
     }
   }, [helpfulClicks])
 
-  const allReviews = [...userReviews, ...reviews]
+  const allReviews = reviews
   const filteredReviews =
     currentFilter === 'all' ? allReviews : allReviews.filter((r) => r.service === currentFilter)
   const reviewsToShow = filteredReviews.slice(0, displayedReviews)
   const hasMore = filteredReviews.length > displayedReviews
 
-  const filterBtn = 'py-2 px-4 text-sm font-[inherit] border border-rule bg-transparent text-ink cursor-pointer hover:bg-ink hover:text-paper hover:border-ink'
+  const filterBtn = 'py-2 px-4 text-sm font-[inherit] border border-rule bg-transparent text-ink cursor-pointer hover:bg-ink hover:text-white hover:border-ink'
 
   return (
     <div>
@@ -191,22 +207,32 @@ export default function Reviews() {
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-6 p-6 border border-rule mb-8">
-            <div className="text-2xl">{generateStars(Math.floor(overallRating.avg))}</div>
-            <div>
-              <span className="text-3xl font-bold">{overallRating.avg}</span>
-              <span className="text-sm text-ink-light ml-1">out of 5 based on <span>{overallRating.total}</span> reviews</span>
-            </div>
+            {loading ? (
+              <p className="text-ink-light">Loading reviews...</p>
+            ) : (
+              <>
+                <div className="text-2xl">{generateStars(Math.floor(overallRating.avg))}</div>
+                <div>
+                  <span className="text-3xl font-bold">{overallRating.avg}</span>
+                  <span className="text-sm text-ink-light ml-1">out of 5 based on <span>{overallRating.total}</span> reviews</span>
+                </div>
+              </>
+            )}
           </div>
 
           <div className="flex flex-wrap justify-center gap-2 mb-8">
-            <button className={`${filterBtn} ${currentFilter === 'all' ? 'bg-ink text-paper border-ink' : ''}`} onClick={() => { setCurrentFilter('all'); setDisplayedReviews(6) }}>All Reviews</button>
-            <button className={`${filterBtn} ${currentFilter === 'basement' ? 'bg-ink text-paper border-ink' : ''}`} onClick={() => { setCurrentFilter('basement'); setDisplayedReviews(6) }}>Basement</button>
-            <button className={`${filterBtn} ${currentFilter === 'kitchen' ? 'bg-ink text-paper border-ink' : ''}`} onClick={() => { setCurrentFilter('kitchen'); setDisplayedReviews(6) }}>Kitchen</button>
-            <button className={`${filterBtn} ${currentFilter === 'bathroom' ? 'bg-ink text-paper border-ink' : ''}`} onClick={() => { setCurrentFilter('bathroom'); setDisplayedReviews(6) }}>Bathroom</button>
-            <button className={`${filterBtn} ${currentFilter === 'living-room' ? 'bg-ink text-paper border-ink' : ''}`} onClick={() => { setCurrentFilter('living-room'); setDisplayedReviews(6) }}>Living Room</button>
+            <button className={`${filterBtn} ${currentFilter === 'all' ? '!bg-ink !text-white border-ink' : ''}`} onClick={() => { setCurrentFilter('all'); setDisplayedReviews(6) }}>All Reviews</button>
+            <button className={`${filterBtn} ${currentFilter === 'basement' ? '!bg-ink !text-white border-ink' : ''}`} onClick={() => { setCurrentFilter('basement'); setDisplayedReviews(6) }}>Basement</button>
+            <button className={`${filterBtn} ${currentFilter === 'kitchen' ? '!bg-ink !text-white border-ink' : ''}`} onClick={() => { setCurrentFilter('kitchen'); setDisplayedReviews(6) }}>Kitchen</button>
+            <button className={`${filterBtn} ${currentFilter === 'bathroom' ? '!bg-ink !text-white border-ink' : ''}`} onClick={() => { setCurrentFilter('bathroom'); setDisplayedReviews(6) }}>Bathroom</button>
+            <button className={`${filterBtn} ${currentFilter === 'living-room' ? '!bg-ink !text-white border-ink' : ''}`} onClick={() => { setCurrentFilter('living-room'); setDisplayedReviews(6) }}>Living Room</button>
           </div>
 
           <div className="grid gap-6 mb-8">
+            {loading && <p className="text-ink-light">Loading reviews...</p>}
+            {!loading && reviewsToShow.length === 0 && (
+              <p className="text-ink-light text-center py-8">No reviews yet. Be the first to share your experience!</p>
+            )}
             {reviewsToShow.map((review, index) => {
               const initials = review.name.split(' ').map((n) => n[0]).join('')
               const formattedDate = formatDate(review.date)
@@ -230,7 +256,7 @@ export default function Reviews() {
                   <div className="pt-4 border-t border-rule-light">
                     <button
                       type="button"
-                      className={`text-sm font-[inherit] border border-rule py-1.5 px-3 cursor-pointer text-ink hover:bg-ink hover:text-paper ${isHelpful ? 'bg-ink text-paper border-ink' : ''}`}
+                      className={`text-sm font-[inherit] border border-rule py-1.5 px-3 cursor-pointer text-ink hover:bg-ink hover:text-white ${isHelpful ? '!bg-ink !text-white border-ink' : ''}`}
                       onClick={() => toggleHelpful(review.id)}
                     >
                       👍 Helpful ({review.helpful + (isHelpful ? 1 : 0)})
@@ -245,7 +271,7 @@ export default function Reviews() {
             <div className="text-center mt-8">
               <button
                 type="button"
-                className="py-2 px-6 text-sm font-[inherit] border border-ink bg-transparent text-ink cursor-pointer hover:bg-ink hover:text-paper"
+                className="py-2 px-6 text-sm font-[inherit] border border-ink bg-transparent text-ink cursor-pointer hover:bg-ink hover:text-white"
                 onClick={() => setDisplayedReviews(displayedReviews + 6)}
               >
                 Load More Reviews
@@ -257,7 +283,7 @@ export default function Reviews() {
 
       <div className={`fixed inset-0 bg-black/80 z-[1000] flex justify-center items-center p-6 ${isModalOpen ? 'flex' : 'hidden'}`} ref={modalRef}>
         <div className="bg-paper p-8 max-w-[560px] w-full max-h-[90vh] overflow-y-auto border border-rule relative">
-          <button type="button" className="absolute top-4 right-4 bg-transparent border border-rule p-1.5 cursor-pointer text-xl text-ink hover:bg-ink hover:text-paper" onClick={closeModal}>&times;</button>
+          <button type="button" className="absolute top-4 right-4 bg-transparent border border-rule p-1.5 cursor-pointer text-xl text-ink hover:bg-ink hover:text-white" onClick={closeModal}>&times;</button>
           <h2 className="text-2xl mb-6 pb-3 border-b border-rule">Write a Review</h2>
           {showSuccess && (
             <div className="bg-ink text-paper p-4 mb-4 text-center text-[0.95rem]">

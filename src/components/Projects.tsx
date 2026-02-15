@@ -99,7 +99,7 @@ export default function Projects() {
       ? projects
       : projects.filter((p) => p.category === activeCategory)
 
-  const filterBtn = 'py-2 px-4 text-sm font-[inherit] border border-rule bg-transparent text-ink cursor-pointer hover:bg-ink hover:text-paper hover:border-ink'
+  const filterBtn = 'py-2 px-4 text-sm font-[inherit] border border-rule bg-transparent text-ink cursor-pointer hover:bg-ink hover:text-white hover:border-ink'
   const ctaBtn = 'inline-block py-2 px-4 text-sm no-underline border border-ink font-[inherit]'
 
   return (
@@ -120,7 +120,7 @@ export default function Projects() {
               <button
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
-                className={`${filterBtn} ${activeCategory === cat.id ? 'bg-ink text-paper border-ink' : ''}`}
+                className={`${filterBtn} ${activeCategory === cat.id ? '!bg-ink !text-white border-ink' : ''}`}
               >
                 {cat.label}
               </button>
@@ -220,7 +220,7 @@ export default function Projects() {
             <Link href="/contact" className={`${ctaBtn} bg-ink text-paper hover:bg-ink-light hover:border-ink-light`}>
               Get Free Estimate
             </Link>
-            <a href="tel:+1234567890" className={`${ctaBtn} bg-transparent text-ink hover:bg-ink hover:text-paper`}>
+            <a href="tel:+1234567890" className={`${ctaBtn} bg-transparent text-ink hover:bg-ink hover:text-white`}>
               Call (123) 456-7890
             </a>
           </div>

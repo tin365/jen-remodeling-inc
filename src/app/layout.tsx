@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import '../styles/globals.css'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
+import LayoutSwitcher from '@/components/LayoutSwitcher'
 
 export const metadata: Metadata = {
   title: 'JEN Remodeling Inc - Professional Home Remodeling Services',
@@ -18,8 +17,9 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
-  viewport: 'width=device-width, initial-scale=1',
 }
+
+export const viewport = { width: 'device-width', initialScale: 1 }
 
 export default function RootLayout({
   children,
@@ -32,9 +32,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
-        <Header />
-        <main>{children}</main>
-        <Footer />
+        <LayoutSwitcher>{children}</LayoutSwitcher>
       </body>
     </html>
   )
