@@ -3,6 +3,7 @@
 'use client'
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { X } from 'lucide-react';
 import './Projects.css';
 
@@ -95,7 +96,6 @@ const Projects = () => {
     <div className="gallery-page">
       {/* Header */}
       <header className="gallery-header">
-        <div className="header-pattern"></div>
         <div className="header-content">
           <h1 className="header-title">Before & After Gallery</h1>
           <p className="header-subtitle">
@@ -224,9 +224,9 @@ const Projects = () => {
             Let's create your perfect before and after story. Get a free consultation today.
           </p>
           <div className="cta-buttons">
-            <a href="#contact" className="cta-btn primary">
+            <Link href="/contact" className="cta-btn primary">
               Get Free Estimate
-            </a>
+            </Link>
             <a href="tel:+1234567890" className="cta-btn secondary">
               Call (123) 456-7890
             </a>

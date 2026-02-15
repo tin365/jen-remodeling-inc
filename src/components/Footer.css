@@ -1,21 +1,18 @@
-/* Traditional Footer Styles */
 .footer {
-  background-color: var(--primary-navy);
-  color: var(--white);
-  padding: 3rem 2rem;
+  background-color: var(--paper);
+  border-top: 1px solid var(--rule);
+  padding: 2rem 1.5rem;
   text-align: center;
-  border-top: 2px solid var(--accent-gold);
-  margin-top: 5rem;
+  margin-top: 2rem;
 }
 
 .footer p {
-  font-family: 'Source Serif Pro', serif;
-  font-size: 1rem;
-  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.875rem;
+  color: var(--ink-light);
   margin: 0;
 }
 
 .footer-container {
-  max-width: 1200px;
+  max-width: 720px;
   margin: 0 auto;
 }
