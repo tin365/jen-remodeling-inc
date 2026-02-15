@@ -221,7 +221,7 @@ const Projects = () => {
         <div className="cta-content">
           <h2 className="cta-title">Ready to Transform Your Home?</h2>
           <p className="cta-subtitle">
-            Let's create your perfect before and after story. Get a free consultation today.
+            Let&apos;s create your perfect before and after story. Get a free consultation today.
           </p>
           <div className="cta-buttons">
             <Link href="/contact" className="cta-btn primary">

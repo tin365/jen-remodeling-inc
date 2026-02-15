@@ -123,7 +123,7 @@ function Services() {
             <section className="cta-section">
                 <div className="cta-container">
                     <h2>Ready to Transform Your Home?</h2>
-                    <p>Get a free consultation and estimate today. Let's discuss your vision and bring it to life.</p>
+                    <p>Get a free consultation and estimate today. Let&apos;s discuss your vision and bring it to life.</p>
                     <div className="cta-buttons">
                         <Link href="/contact" className="btn btn-primary">Schedule Free Consultation</Link>
                     </div>

@@ -2,6 +2,7 @@ const repo = 'jen-remodeling-inc'
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  outputFileTracingRoot: __dirname,
   reactStrictMode: true,
   images: {
     remotePatterns: [

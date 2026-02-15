@@ -144,7 +144,7 @@ const Contact = () => {
       <section className="contact-hero">
         <div className="hero-overlay"></div>
         <div className="hero-content">
-          <h1 className="hero-title">Let's Build Your Dream Home</h1>
+          <h1 className="hero-title">Let&apos;s Build Your Dream Home</h1>
           <p className="hero-subtitle">
             Ready to transform your space? Get in touch with us today for a free consultation and estimate.
           </p>
@@ -171,7 +171,7 @@ const Contact = () => {
               <p className="info-detail">
                 <a href="mailto:info@yourremodeling.com">info@yourremodeling.com</a>
               </p>
-              <p className="info-subtitle">We'll respond within 24 hours</p>
+              <p className="info-subtitle">We&apos;ll respond within 24 hours</p>
             </div>
 
             <div className="info-card">
@@ -202,7 +202,7 @@ const Contact = () => {
               <div className="success-message">
                 <div className="success-icon">✓</div>
                 <h3>Thank you for contacting us!</h3>
-                <p>We've received your message and will get back to you soon.</p>
+                <p>We&apos;ve received your message and will get back to you soon.</p>
               </div>
             )}
 

@@ -301,7 +301,7 @@ const Reviews = () => {
                     <div className="section-header">
                         <span className="header-label">Testimonials</span>
                         <h2 className="section-title">What Our Clients Say</h2>
-                        <p className="section-subtitle">Don't just take our word for it. Here's what homeowners have to say about their remodeling experience with us.</p>
+                        <p className="section-subtitle">Don&apos;t just take our word for it. Here&apos;s what homeowners have to say about their remodeling experience with us.</p>
                     </div>
 
                     {/* Overall Rating */}
