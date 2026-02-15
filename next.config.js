@@ -1,6 +1,4 @@
 const repo = 'jen-remodeling-inc'
-const assetPrefix = `/${repo}/`
-const basePath = `/${repo}`
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -9,11 +7,12 @@ const nextConfig = {
     domains: ['images.unsplash.com'],
     formats: ['image/avif', 'image/webp'],
   },
-  // For GitHub Pages deployment (https://tin365.github.io/jen-remodeling-inc/)
-  assetPrefix: assetPrefix,
-  basePath: basePath,
-  output: 'export', // Static export for GitHub Pages
+  // GitHub Pages: https://tin365.github.io/jen-remodeling-inc/
+  basePath: process.env.NODE_ENV === 'production' ? `/${repo}` : '',
+  assetPrefix: process.env.NODE_ENV === 'production' ? `/${repo}/` : '',
+  output: 'export',
   trailingSlash: true,
 }
 
 module.exports = nextConfig
+
