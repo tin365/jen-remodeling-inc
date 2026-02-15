@@ -1,5 +1,7 @@
 const repo = 'jen-remodeling-inc'
-const base = process.env.NODE_ENV === 'production' ? `https://tin365.github.io/${repo}` : ''
+const basePath = process.env.NODE_ENV === 'production' ? `/${repo}` : ''
+// Path-only prefix so assets load from current origin (works on GH Pages and local preview)
+const assetPrefix = basePath ? `${basePath}/` : ''
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -15,8 +17,8 @@ const nextConfig = {
     ],
     formats: ['image/avif', 'image/webp'],
   },
-  basePath: process.env.NODE_ENV === 'production' ? `/${repo}` : '',
-  assetPrefix: base ? `${base}/` : '',
+  basePath,
+  assetPrefix,
   output: 'export',
   trailingSlash: true,
 }
