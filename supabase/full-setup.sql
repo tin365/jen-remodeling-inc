@@ -70,7 +70,12 @@ CREATE POLICY "Admins can delete contact_submissions"
   ON contact_submissions FOR DELETE TO authenticated
   USING (EXISTS (SELECT 1 FROM admin_users WHERE user_id = auth.uid()));
 
--- 7. Admin: delete reviews
+-- 7. Admin: read + delete reviews
+DROP POLICY IF EXISTS "Admins can read reviews" ON reviews;
+CREATE POLICY "Admins can read reviews"
+  ON reviews FOR SELECT TO authenticated
+  USING (EXISTS (SELECT 1 FROM admin_users WHERE user_id = auth.uid()));
+
 DROP POLICY IF EXISTS "Admins can delete reviews" ON reviews;
 CREATE POLICY "Admins can delete reviews"
   ON reviews FOR DELETE TO authenticated

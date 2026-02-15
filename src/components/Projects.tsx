@@ -99,12 +99,12 @@ export default function Projects() {
       ? projects
       : projects.filter((p) => p.category === activeCategory)
 
-  const filterBtn = 'py-2 px-4 text-sm font-[inherit] border border-rule bg-transparent text-ink cursor-pointer hover:bg-ink hover:text-white hover:border-ink'
+  const filterBtn = 'py-1.5 px-3 sm:py-2 sm:px-4 text-xs sm:text-sm font-[inherit] border border-rule bg-transparent text-ink cursor-pointer hover:bg-ink hover:text-white hover:border-ink'
   const ctaBtn = 'inline-block py-2 px-4 text-sm no-underline border border-ink font-[inherit]'
 
   return (
     <div className="min-h-screen bg-paper">
-      <header className="py-12 px-6 text-center border-b border-rule-light">
+      <header className="py-8 sm:py-12 px-4 sm:px-6 text-center border-b border-rule-light">
         <div className="max-w-content mx-auto">
           <h1 className="text-[clamp(1.5rem,4vw,2.25rem)] mb-2">Before & After Gallery</h1>
           <p className="text-[0.95rem] text-ink-light">
@@ -114,7 +114,7 @@ export default function Projects() {
       </header>
 
       <div className="sticky top-0 z-40 bg-paper border-b border-rule-light">
-        <div className="max-w-content mx-auto py-4 px-6">
+        <div className="max-w-content mx-auto py-3 sm:py-4 px-4 sm:px-6">
           <div className="flex flex-wrap justify-center gap-2">
             {categories.map((cat) => (
               <button
@@ -129,7 +129,7 @@ export default function Projects() {
         </div>
       </div>
 
-      <div className="max-w-content mx-auto py-8 px-6">
+      <div className="max-w-content mx-auto py-6 sm:py-8 px-4 sm:px-6">
         <div className="grid gap-8 grid-cols-1">
           {filteredProjects.map((project, index) => (
             <div
@@ -170,14 +170,15 @@ export default function Projects() {
       </div>
 
       {selectedProject && (
-        <div className="fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-6">
+        <div className="fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-3 sm:p-6">
           <button
             onClick={() => setSelectedProject(null)}
-            className="absolute top-4 right-4 text-paper bg-transparent border border-paper p-2 cursor-pointer text-xl hover:bg-paper hover:text-ink"
+            className="absolute top-3 right-3 sm:top-4 sm:right-4 text-paper bg-transparent border border-paper p-1.5 sm:p-2 cursor-pointer text-lg sm:text-xl hover:bg-paper hover:text-ink z-10"
           >
-            <X size={32} />
+            <X size={24} className="sm:hidden" />
+            <X size={32} className="hidden sm:block" />
           </button>
-          <div className="max-w-content w-full bg-paper p-8 border border-rule max-h-[90vh] overflow-y-auto">
+          <div className="max-w-content w-full bg-paper p-4 sm:p-8 border border-rule max-h-[90vh] overflow-y-auto">
             <div className="mb-6 pb-4 border-b border-rule">
               <h2 className="text-xl mb-2">{selectedProject.title}</h2>
               <p className="text-[0.95rem] text-ink-light">{selectedProject.description}</p>
@@ -210,7 +211,7 @@ export default function Projects() {
         </div>
       )}
 
-      <div className="py-12 px-6 text-center border-t border-rule">
+      <div className="py-8 sm:py-12 px-4 sm:px-6 text-center border-t border-rule">
         <div className="max-w-content mx-auto">
           <h2 className="text-xl mb-2">Ready to Transform Your Home?</h2>
           <p className="text-[0.95rem] text-ink-light mb-6">

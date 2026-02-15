@@ -145,34 +145,34 @@ export default function Contact() {
 
       <section className="py-12 px-6">
         <div className="max-w-content mx-auto">
-          <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-6 mb-12">
-            <div className="p-6 border border-rule-light text-center">
-              <span className="text-2xl block mb-3">📞</span>
-              <h3 className="text-base mb-2">Call Us</h3>
-              <p className="text-[0.95rem]"><a href="tel:+1234567890" className="text-ink underline hover:decoration-2">(123) 456-7890</a></p>
-              <p className="text-sm text-ink-light">Mon-Fri: 8AM - 6PM</p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 mb-12">
+            <div className="p-3 sm:p-6 border border-rule-light text-center">
+              <span className="text-xl sm:text-2xl block mb-2 sm:mb-3">📞</span>
+              <h3 className="text-sm sm:text-base mb-1 sm:mb-2">Call Us</h3>
+              <p className="text-xs sm:text-[0.95rem]"><a href="tel:+1234567890" className="text-ink underline hover:decoration-2">(123) 456-7890</a></p>
+              <p className="text-xs sm:text-sm text-ink-light hidden sm:block">Mon-Fri: 8AM - 6PM</p>
             </div>
-            <div className="p-6 border border-rule-light text-center">
-              <span className="text-2xl block mb-3">✉️</span>
-              <h3 className="text-base mb-2">Email Us</h3>
-              <p className="text-[0.95rem]"><a href="mailto:info@jenremodeling.com" className="text-ink underline hover:decoration-2">info@jenremodeling.com</a></p>
-              <p className="text-sm text-ink-light">We&apos;ll respond within 24 hours</p>
+            <div className="p-3 sm:p-6 border border-rule-light text-center">
+              <span className="text-xl sm:text-2xl block mb-2 sm:mb-3">✉️</span>
+              <h3 className="text-sm sm:text-base mb-1 sm:mb-2">Email Us</h3>
+              <p className="text-xs sm:text-[0.95rem] break-all"><a href="mailto:info@jenremodeling.com" className="text-ink underline hover:decoration-2">info@jenremodeling.com</a></p>
+              <p className="text-xs sm:text-sm text-ink-light hidden sm:block">We&apos;ll respond within 24 hours</p>
             </div>
-            <div className="p-6 border border-rule-light text-center">
-              <span className="text-2xl block mb-3">📍</span>
-              <h3 className="text-base mb-2">Visit Us</h3>
-              <p className="text-[0.95rem]">123 Remodeling Street</p>
-              <p className="text-sm text-ink-light">Your City, ST 12345</p>
+            <div className="p-3 sm:p-6 border border-rule-light text-center">
+              <span className="text-xl sm:text-2xl block mb-2 sm:mb-3">📍</span>
+              <h3 className="text-sm sm:text-base mb-1 sm:mb-2">Visit Us</h3>
+              <p className="text-xs sm:text-[0.95rem]">123 Remodeling Street</p>
+              <p className="text-xs sm:text-sm text-ink-light hidden sm:block">Your City, ST 12345</p>
             </div>
-            <div className="p-6 border border-rule-light text-center">
-              <span className="text-2xl block mb-3">🕐</span>
-              <h3 className="text-base mb-2">Business Hours</h3>
-              <p className="text-[0.95rem]">Monday - Friday</p>
-              <p className="text-sm text-ink-light">8:00 AM - 6:00 PM</p>
+            <div className="p-3 sm:p-6 border border-rule-light text-center">
+              <span className="text-xl sm:text-2xl block mb-2 sm:mb-3">🕐</span>
+              <h3 className="text-sm sm:text-base mb-1 sm:mb-2">Hours</h3>
+              <p className="text-xs sm:text-[0.95rem]">Mon - Fri</p>
+              <p className="text-xs sm:text-sm text-ink-light hidden sm:block">8:00 AM - 6:00 PM</p>
             </div>
           </div>
 
-          <div className="p-8 border border-rule-light mb-12">
+          <div className="p-4 sm:p-8 border border-rule-light mb-12">
             <div className="text-center mb-8 pb-4 border-b border-rule-light">
               <h2 className="text-2xl mb-2">Request a Free Consultation</h2>
               <p className="text-[0.95rem] text-ink-light">
@@ -285,7 +285,7 @@ export default function Contact() {
 
           <div className="text-center pt-8 border-t border-rule-light">
             <h2 className="text-xl mb-6">Why Choose Us?</h2>
-            <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
               <div className="p-5 border border-rule-light">
                 <span className="text-2xl block mb-3">⚡</span>
                 <h3 className="text-base mb-2">Fast Response</h3>

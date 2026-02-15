@@ -1,5 +1,3 @@
-'use client'
-
 import React from 'react'
 import Link from 'next/link'
 
@@ -86,7 +84,7 @@ const btnSecondary = 'bg-transparent text-ink hover:bg-ink hover:text-paper'
 export default function Services() {
   return (
     <div className="w-full min-h-screen bg-paper">
-      <section className="py-12 px-6 text-center border-b border-rule-light">
+      <section className="py-8 sm:py-12 px-4 sm:px-6 text-center border-b border-rule-light">
         <div className="max-w-content mx-auto">
           <h1 className="text-[clamp(1.5rem,4vw,2.25rem)] mb-3">Transform Your Home</h1>
           <p className="mb-6">Expert remodeling services for every room in your house. Quality craftsmanship, stunning results.</p>
@@ -98,7 +96,7 @@ export default function Services() {
       </section>
 
       <section className="py-8">
-        <div className="max-w-content mx-auto px-6">
+        <div className="max-w-content mx-auto px-4 sm:px-6">
           {servicesData.map((service, index) => (
             <div
               key={index}
@@ -130,7 +128,7 @@ export default function Services() {
         </div>
       </section>
 
-      <section className="py-12 px-6 text-center border-t border-rule">
+      <section className="py-8 sm:py-12 px-4 sm:px-6 text-center border-t border-rule">
         <div className="max-w-content mx-auto">
           <h2 className="text-2xl mb-3">Ready to Transform Your Home?</h2>
           <p className="mb-6">Get a free consultation and estimate today. Let&apos;s discuss your vision and bring it to life.</p>

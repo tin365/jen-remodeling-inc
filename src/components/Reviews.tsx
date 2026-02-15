@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useCallback, useRef } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
 
 type ReviewService = 'basement' | 'kitchen' | 'bathroom' | 'living-room' | 'other'
@@ -38,7 +38,7 @@ export default function Reviews() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [formData, setFormData] = useState<ReviewFormData>(initialFormData)
   const [showSuccess, setShowSuccess] = useState(false)
-  const modalRef = useRef<HTMLDivElement>(null)
+
 
   const calculateOverallRating = useCallback(() => {
     if (reviews.length === 0) return { avg: 0, total: 0 }
@@ -107,10 +107,7 @@ export default function Reviews() {
       .from('reviews')
       .select('id, name, service, rating, "text", helpful, created_at')
       .order('created_at', { ascending: false })
-    if (error) {
-      console.error('Error fetching reviews:', error.message, error)
-      return
-    }
+    if (error) return
     const mapped: Review[] = (data ?? []).map((r) => ({
       id: r.id,
       name: r.name,
@@ -161,11 +158,7 @@ export default function Reviews() {
       setDisplayedReviews(6)
       setTimeout(() => setShowSuccess(false), 1500)
     } catch (err) {
-      const message = err && typeof err === 'object' && 'message' in err ? String((err as { message: string }).message) : ''
-      if (process.env.NODE_ENV === 'development' && message) {
-        console.error('Error submitting review:', message, err)
-      }
-      alert(message ? `Failed to submit review: ${message}` : 'Failed to submit review. Please try again.')
+      alert('Failed to submit review. Please try again.')
     }
   }
 
@@ -175,8 +168,8 @@ export default function Reviews() {
       if (savedHelpful) {
         try {
           setHelpfulClicks(JSON.parse(savedHelpful))
-        } catch (e) {
-          console.error('Error loading helpful clicks:', e)
+        } catch {
+          // ignore corrupted localStorage
         }
       }
     }
@@ -194,7 +187,7 @@ export default function Reviews() {
   const reviewsToShow = filteredReviews.slice(0, displayedReviews)
   const hasMore = filteredReviews.length > displayedReviews
 
-  const filterBtn = 'py-2 px-4 text-sm font-[inherit] border border-rule bg-transparent text-ink cursor-pointer hover:bg-ink hover:text-white hover:border-ink'
+  const filterBtn = 'py-1.5 px-3 sm:py-2 sm:px-4 text-xs sm:text-sm font-[inherit] border border-rule bg-transparent text-ink cursor-pointer hover:bg-ink hover:text-white hover:border-ink'
 
   return (
     <div>
@@ -206,7 +199,7 @@ export default function Reviews() {
             <p className="text-[0.95rem] text-ink-light">Don&apos;t just take our word for it. Here&apos;s what homeowners have to say about their remodeling experience with us.</p>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-6 p-6 border border-rule mb-8">
+          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 p-4 sm:p-6 border border-rule mb-6 sm:mb-8">
             {loading ? (
               <p className="text-ink-light">Loading reviews...</p>
             ) : (
@@ -238,21 +231,21 @@ export default function Reviews() {
               const formattedDate = formatDate(review.date)
               const isHelpful = helpfulClicks[review.id]
               return (
-                <div key={review.id} className="p-6 border border-rule-light border-l-4 border-l-ink" style={{ animationDelay: `${index * 0.1}s` }}>
-                  <div className="flex justify-between items-start mb-4 pb-4 border-b border-rule-light">
+                <div key={review.id} className="p-4 sm:p-6 border border-rule-light border-l-4 border-l-ink" style={{ animationDelay: `${index * 0.1}s` }}>
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-3 sm:mb-4 pb-3 sm:pb-4 border-b border-rule-light gap-2">
                     <div className="flex items-start gap-3">
-                      <div className="w-10 h-10 flex items-center justify-center bg-ink text-paper text-xs font-bold shrink-0">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center bg-ink text-paper text-[10px] sm:text-xs font-bold shrink-0">
                         {initials}
                       </div>
                       <div>
-                        <h4 className="text-base mb-1">{review.name}</h4>
-                        <span className="text-sm text-ink-light">{formattedDate}</span>
+                        <h4 className="text-sm sm:text-base mb-0.5 sm:mb-1">{review.name}</h4>
+                        <span className="text-xs sm:text-sm text-ink-light">{formattedDate}</span>
                       </div>
                     </div>
-                    <div className="text-sm">{generateStars(review.rating)}</div>
+                    <div className="text-xs sm:text-sm pl-11 sm:pl-0">{generateStars(review.rating)}</div>
                   </div>
                   <span className="inline-block text-[0.7rem] uppercase tracking-wider text-ink-light mb-3">{formatServiceName(review.service)}</span>
-                  <p className="text-[0.95rem] leading-relaxed mb-4">{review.text}</p>
+                  <p className="text-sm sm:text-[0.95rem] leading-relaxed mb-3 sm:mb-4">{review.text}</p>
                   <div className="pt-4 border-t border-rule-light">
                     <button
                       type="button"
@@ -281,8 +274,8 @@ export default function Reviews() {
         </div>
       </section>
 
-      <div className={`fixed inset-0 bg-black/80 z-[1000] flex justify-center items-center p-6 ${isModalOpen ? 'flex' : 'hidden'}`} ref={modalRef}>
-        <div className="bg-paper p-8 max-w-[560px] w-full max-h-[90vh] overflow-y-auto border border-rule relative">
+      <div className={`fixed inset-0 bg-black/80 z-[1000] flex justify-center items-center p-3 sm:p-6 ${isModalOpen ? 'flex' : 'hidden'}`}>
+        <div className="bg-paper p-4 sm:p-8 max-w-[560px] w-full max-h-[90vh] overflow-y-auto border border-rule relative">
           <button type="button" className="absolute top-4 right-4 bg-transparent border border-rule p-1.5 cursor-pointer text-xl text-ink hover:bg-ink hover:text-white" onClick={closeModal}>&times;</button>
           <h2 className="text-2xl mb-6 pb-3 border-b border-rule">Write a Review</h2>
           {showSuccess && (

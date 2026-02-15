@@ -50,6 +50,6 @@
 
 @layer components {
   .container {
-    @apply max-w-content mx-auto px-6;
+    @apply max-w-content mx-auto px-4 sm:px-6;
   }
 }
