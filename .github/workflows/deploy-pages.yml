@@ -77,7 +77,7 @@ jobs:
       id-token: write
     environment:
       name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
+      url: https://tin365.github.io/jen-remodeling-inc
     steps:
       - name: Deploy to GitHub Pages
         id: deploy
