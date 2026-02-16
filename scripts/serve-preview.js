@@ -16,6 +16,10 @@ if (!fs.existsSync(outDir)) {
   process.exit(1)
 }
 
+// Clear stale preview so CSS/JS from current build always match the HTML
+if (fs.existsSync(previewDir)) {
+  fs.rmSync(previewDir, { recursive: true })
+}
 fs.mkdirSync(previewDir, { recursive: true })
 for (const name of fs.readdirSync(outDir)) {
   const src = path.join(outDir, name)
