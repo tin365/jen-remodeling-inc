@@ -1,6 +1,6 @@
 const repo = 'jen-remodeling-inc'
 const basePath = process.env.NODE_ENV === 'production' ? `/${repo}` : ''
-// Path-only (not full URL): assets load from current origin → works on GH Pages and npm run start
+// Path-only: assets load from current origin. Requires .nojekyll so GitHub Pages serves _next/
 const assetPrefix = basePath ? `${basePath}/` : ''
 
 /** @type {import('next').NextConfig} */

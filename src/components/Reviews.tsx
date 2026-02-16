@@ -124,6 +124,20 @@ export default function Reviews() {
     fetchReviews().finally(() => setLoading(false))
   }, [fetchReviews])
 
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') closeModal()
+    }
+    if (isModalOpen) {
+      document.addEventListener('keydown', handleEscape)
+      document.body.style.overflow = 'hidden'
+    }
+    return () => {
+      document.removeEventListener('keydown', handleEscape)
+      document.body.style.overflow = ''
+    }
+  }, [isModalOpen])
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!formData.rating) {
@@ -274,9 +288,18 @@ export default function Reviews() {
         </div>
       </section>
 
-      <div className={`fixed inset-0 bg-black/80 z-[1000] flex justify-center items-center p-3 sm:p-6 ${isModalOpen ? 'flex' : 'hidden'}`}>
-        <div className="bg-paper p-4 sm:p-8 max-w-[560px] w-full max-h-[90vh] overflow-y-auto border border-rule relative">
-          <button type="button" className="absolute top-4 right-4 bg-transparent border border-rule p-1.5 cursor-pointer text-xl text-ink hover:bg-ink hover:text-white" onClick={closeModal}>&times;</button>
+      <div
+        className={`fixed inset-0 bg-black/80 z-[1000] flex justify-center items-center p-3 sm:p-6 ${isModalOpen ? 'flex' : 'hidden'}`}
+        onClick={closeModal}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Write a review"
+      >
+        <div
+          className="bg-paper p-4 sm:p-8 max-w-[560px] w-full max-h-[90vh] overflow-y-auto border border-rule relative"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <button type="button" className="absolute top-4 right-4 bg-transparent border border-rule p-1.5 cursor-pointer text-xl text-ink hover:bg-ink hover:text-white rounded" onClick={closeModal} aria-label="Close (Escape)">&times;</button>
           <h2 className="text-2xl mb-6 pb-3 border-b border-rule">Write a Review</h2>
           {showSuccess && (
             <div className="bg-ink text-paper p-4 mb-4 text-center text-[0.95rem]">

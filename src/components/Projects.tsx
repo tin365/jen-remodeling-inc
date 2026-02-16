@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { X } from 'lucide-react'
 
@@ -102,6 +102,20 @@ export default function Projects() {
   const filterBtn = 'py-1.5 px-3 sm:py-2 sm:px-4 text-xs sm:text-sm font-[inherit] border border-rule bg-transparent text-ink cursor-pointer hover:bg-ink hover:text-white hover:border-ink'
   const ctaBtn = 'inline-block py-2 px-4 text-sm no-underline border border-ink font-[inherit]'
 
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setSelectedProject(null)
+    }
+    if (selectedProject) {
+      document.addEventListener('keydown', handleEscape)
+      document.body.style.overflow = 'hidden'
+    }
+    return () => {
+      document.removeEventListener('keydown', handleEscape)
+      document.body.style.overflow = ''
+    }
+  }, [selectedProject])
+
   return (
     <div className="min-h-screen bg-paper">
       <header className="py-8 sm:py-12 px-4 sm:px-6 text-center border-b border-rule-light">
@@ -170,17 +184,28 @@ export default function Projects() {
       </div>
 
       {selectedProject && (
-        <div className="fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-3 sm:p-6">
-          <button
-            onClick={() => setSelectedProject(null)}
-            className="absolute top-3 right-3 sm:top-4 sm:right-4 text-paper bg-transparent border border-paper p-1.5 sm:p-2 cursor-pointer text-lg sm:text-xl hover:bg-paper hover:text-ink z-10"
+        <div
+          className="fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-3 sm:p-6"
+          onClick={() => setSelectedProject(null)}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="project-modal-title"
+        >
+          <div
+            className="max-w-content w-full bg-paper p-4 sm:p-8 border border-rule max-h-[90vh] overflow-y-auto relative"
+            onClick={(e) => e.stopPropagation()}
           >
-            <X size={24} className="sm:hidden" />
-            <X size={32} className="hidden sm:block" />
-          </button>
-          <div className="max-w-content w-full bg-paper p-4 sm:p-8 border border-rule max-h-[90vh] overflow-y-auto">
+            <button
+              type="button"
+              onClick={() => setSelectedProject(null)}
+              className="absolute top-3 right-3 sm:top-4 sm:right-4 text-ink border border-rule p-1.5 sm:p-2 cursor-pointer text-lg sm:text-xl hover:bg-ink hover:text-paper z-10 rounded"
+              aria-label="Close (Escape)"
+            >
+              <X size={24} className="sm:hidden" />
+              <X size={32} className="hidden sm:block" />
+            </button>
             <div className="mb-6 pb-4 border-b border-rule">
-              <h2 className="text-xl mb-2">{selectedProject.title}</h2>
+              <h2 id="project-modal-title" className="text-xl mb-2 pr-10">{selectedProject.title}</h2>
               <p className="text-[0.95rem] text-ink-light">{selectedProject.description}</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 border border-rule">
