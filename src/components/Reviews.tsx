@@ -157,7 +157,7 @@ export default function Reviews() {
       setFormData(initialFormData)
       setDisplayedReviews(6)
       setTimeout(() => setShowSuccess(false), 1500)
-    } catch (err) {
+    } catch {
       alert('Failed to submit review. Please try again.')
     }
   }

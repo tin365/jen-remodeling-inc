@@ -122,7 +122,7 @@ export default function Contact() {
       setFormData(initialFormData)
       setErrors({})
       setTimeout(() => setSubmitSuccess(false), 3000)
-    } catch (err) {
+    } catch {
       setSubmitError('Failed to send. Please try again or call us.')
     } finally {
       setIsSubmitting(false)

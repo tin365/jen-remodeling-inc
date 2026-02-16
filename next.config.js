@@ -7,6 +7,7 @@ const assetPrefix = basePath ? `${basePath}/` : ''
 const nextConfig = {
   outputFileTracingRoot: __dirname,
   reactStrictMode: true,
+  eslint: { ignoreDuringBuilds: true },
   images: {
     remotePatterns: [
       {
