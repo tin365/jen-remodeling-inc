@@ -8,6 +8,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write   # Required so the action can push to the gh-pages branch
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -22,6 +24,9 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      - name: Add .nojekyll so GitHub Pages serves _next/ (CSS & JS)
+        run: node scripts/ensure-nojekyll.js
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
