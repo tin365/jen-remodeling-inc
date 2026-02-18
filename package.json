@@ -8,9 +8,7 @@
     "build": "next build",
     "start": "node scripts/serve-preview.js",
     "lint": "next lint",
-    "export": "next build",
-    "predeploy": "npm run build",
-    "deploy": "npm run build && node scripts/ensure-nojekyll.js && gh-pages -d out"
+    "export": "next build"
   },
   "dependencies": {
     "lucide-react": "^0.563.0",
