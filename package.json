@@ -9,7 +9,7 @@
     "start": "node scripts/serve-preview.js",
     "lint": "next lint",
     "export": "next build",
-    "deploy": "npm run build && node scripts/ensure-nojekyll.js && npx gh-pages -d out --dotfiles"
+    "deploy": "npm run build && node scripts/ensure-nojekyll.js && npx gh-pages -d out --dotfiles -r https://github.com/tin365/jen-remodeling-inc.git"
   },
   "dependencies": {
     "lucide-react": "^0.563.0",
