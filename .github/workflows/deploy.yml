@@ -9,28 +9,31 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     permissions:
-      contents: write   # Required so the action can push to the gh-pages branch
+      contents: write  # push to gh-pages branch
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 22
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Build
         run: npm run build
+        env:
+          # Add these in repo: Settings → Secrets and variables → Actions (Variables)
+          NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
 
-      - name: Add .nojekyll so GitHub Pages serves _next/ (CSS & JS)
+      - name: Add .nojekyll
         run: node scripts/ensure-nojekyll.js
 
-      - name: Deploy
+      - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./out
-          cname: ''
