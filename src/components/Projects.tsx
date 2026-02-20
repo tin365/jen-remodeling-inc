@@ -16,115 +16,6 @@ interface Project {
   description: string
 }
 
-const staticProjects: Project[] = [
-  {
-    id: '1',
-    category: 'basement',
-    title: 'Modern Basement Entertainment Room',
-    before: ['/istockphoto-1312800260-612x612.jpg'],
-    after: ['/WhatsApp%20Image%202026-02-14%20at%2021.45.33.jpeg'],
-    description: 'Transformed an unused basement into a modern entertainment space with custom lighting and built-in shelving.',
-  },
-  {
-    id: '2',
-    category: 'kitchen',
-    title: 'Contemporary Kitchen Renovation',
-    before: [
-      'https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?w=800&h=600&fit=crop',
-      'https://images.unsplash.com/photo-1556911220-bff31c812dba?w=800&h=600&fit=crop',
-    ],
-    after: [
-      'https://images.unsplash.com/photo-1556912167-f556f1f39faa?w=800&h=600&fit=crop',
-      'https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?w=800&h=600&fit=crop',
-    ],
-    description: 'Complete kitchen overhaul with new cabinets, quartz countertops, and modern appliances.',
-  },
-  {
-    id: '3',
-    category: 'bathroom',
-    title: 'Luxury Spa Bathroom',
-    before: [
-      'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=800&h=600&fit=crop',
-      'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=800&h=600&fit=crop',
-    ],
-    after: [
-      'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=800&h=600&fit=crop',
-      'https://images.unsplash.com/photo-1600566753151-384129cf4e3e?w=800&h=600&fit=crop',
-    ],
-    description: 'Converted outdated bathroom into a luxurious spa retreat with walk-in shower and custom vanity.',
-  },
-  {
-    id: '4',
-    category: 'living-room',
-    title: 'Open Concept Living Room',
-    before: [
-      'https://images.unsplash.com/photo-1556020685-ae41abfc9365?w=800&h=600&fit=crop',
-      'https://images.unsplash.com/photo-1556020685-ae41abfc9365?w=800&h=600&fit=crop',
-    ],
-    after: [
-      'https://images.unsplash.com/photo-1600210492493-0946911123ea?w=800&h=600&fit=crop',
-      'https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?w=800&h=600&fit=crop',
-    ],
-    description: 'Opened up the living space by removing walls and adding modern hardwood flooring.',
-  },
-  {
-    id: '5',
-    category: 'kitchen',
-    title: 'Farmhouse Kitchen Remodel',
-    before: [
-      'https://images.unsplash.com/photo-1556911220-bff31c812dba?w=800&h=600&fit=crop',
-      'https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?w=800&h=600&fit=crop',
-    ],
-    after: [
-      'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&h=600&fit=crop',
-      'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=800&h=600&fit=crop',
-    ],
-    description: 'Classic farmhouse kitchen with shaker cabinets, butcher block island, and subway tile backsplash.',
-  },
-  {
-    id: '6',
-    category: 'basement',
-    title: 'Basement Home Office',
-    before: [
-      'https://images.unsplash.com/photo-1581858726788-75bc0f6a952d?w=800&h=600&fit=crop',
-      'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=800&h=600&fit=crop',
-    ],
-    after: [
-      'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=800&h=600&fit=crop',
-      'https://images.unsplash.com/photo-1600210492493-0946911123ea?w=800&h=600&fit=crop',
-    ],
-    description: 'Created a productive home office space with custom built-ins and professional lighting.',
-  },
-  {
-    id: '7',
-    category: 'bathroom',
-    title: 'Master Bathroom Suite',
-    before: [
-      'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=800&h=600&fit=crop',
-      'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=800&h=600&fit=crop',
-    ],
-    after: [
-      'https://images.unsplash.com/photo-1600566753151-384129cf4e3e?w=800&h=600&fit=crop',
-      'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=800&h=600&fit=crop',
-    ],
-    description: 'Luxurious master bathroom with dual vanities, soaking tub, and marble tile.',
-  },
-  {
-    id: '8',
-    category: 'living-room',
-    title: 'Modern Living Space',
-    before: [
-      'https://images.unsplash.com/photo-1556020685-ae41abfc9365?w=800&h=600&fit=crop',
-      'https://images.unsplash.com/photo-1556911220-bff31c812dba?w=800&h=600&fit=crop',
-    ],
-    after: [
-      'https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?w=800&h=600&fit=crop',
-      'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=800&h=600&fit=crop',
-    ],
-    description: 'Contemporary living room with statement fireplace and custom entertainment center.',
-  },
-]
-
 const categories: { id: 'all' | ProjectCategory; label: string }[] = [
   { id: 'all', label: 'All Projects' },
   { id: 'basement', label: 'Basement' },
@@ -136,7 +27,9 @@ const categories: { id: 'all' | ProjectCategory; label: string }[] = [
 export default function Projects() {
   const [activeCategory, setActiveCategory] = useState<'all' | ProjectCategory>('all')
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
-  const [projects, setProjects] = useState<Project[]>(staticProjects)
+  const [expandedImage, setExpandedImage] = useState<{ url: string; alt: string } | null>(null)
+  const [projects, setProjects] = useState<Project[]>([])
+  const [projectsReady, setProjectsReady] = useState(false)
 
   useEffect(() => {
     let cancelled = false
@@ -146,7 +39,12 @@ export default function Projects() {
           .from('projects')
           .select('id, title, category, description, sort_order')
           .order('sort_order', { ascending: true })
-        if (cancelled || !projectsData?.length) return
+        if (cancelled) return
+        if (!projectsData?.length) {
+          setProjects([])
+          setProjectsReady(true)
+          return
+        }
         const { data: imagesData } = await supabase
           .from('project_images')
           .select('project_id, url, label, sort_order')
@@ -165,8 +63,10 @@ export default function Projects() {
           }
         })
         setProjects(merged)
+        setProjectsReady(true)
       } catch {
-        // Keep static projects if Supabase unavailable
+        setProjects([])
+        setProjectsReady(true)
       }
     }
     load()
@@ -183,7 +83,10 @@ export default function Projects() {
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setSelectedProject(null)
+      if (e.key === 'Escape') {
+        if (expandedImage) setExpandedImage(null)
+        else setSelectedProject(null)
+      }
     }
     if (selectedProject) {
       document.addEventListener('keydown', handleEscape)
@@ -193,7 +96,7 @@ export default function Projects() {
       document.removeEventListener('keydown', handleEscape)
       document.body.style.overflow = ''
     }
-  }, [selectedProject])
+  }, [selectedProject, expandedImage])
 
   return (
     <div className="min-h-screen bg-paper">
@@ -223,6 +126,15 @@ export default function Projects() {
       </div>
 
       <div className="max-w-content mx-auto py-6 sm:py-8 px-4 sm:px-6">
+        {!projectsReady ? (
+          <div className="flex items-center justify-center py-16 text-ink-light">
+            <p className="text-sm">Loading projects…</p>
+          </div>
+        ) : filteredProjects.length === 0 ? (
+          <div className="flex items-center justify-center py-16 text-ink-light">
+            <p className="text-sm">No projects to display.</p>
+          </div>
+        ) : (
         <div className="grid gap-8 grid-cols-1">
           {filteredProjects.map((project, index) => (
             <div
@@ -232,16 +144,28 @@ export default function Projects() {
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <div className="relative grid grid-cols-1 md:grid-cols-2 border-b border-rule">
-                <img
-                  src={project.before[0]}
-                  alt={`${project.title} - Before`}
-                  className="w-full h-auto block md:border-r border-rule"
-                />
-                <img
-                  src={project.after[0]}
-                  alt={`${project.title} - After`}
-                  className="w-full h-auto block"
-                />
+                <div className="w-full aspect-[4/3] bg-rule-light/10 overflow-hidden md:border-r border-rule flex items-center justify-center">
+                  {project.before[0] ? (
+                    <img
+                      src={project.before[0]}
+                      alt={`${project.title} - Before`}
+                      className="w-full h-full object-cover block"
+                    />
+                  ) : (
+                    <span className="text-ink-light text-sm">No before image</span>
+                  )}
+                </div>
+                <div className="w-full aspect-[4/3] bg-rule-light/10 overflow-hidden flex items-center justify-center">
+                  {project.after[0] ? (
+                    <img
+                      src={project.after[0]}
+                      alt={`${project.title} - After`}
+                      className="w-full h-full object-cover block"
+                    />
+                  ) : (
+                    <span className="text-ink-light text-sm">No after image</span>
+                  )}
+                </div>
                 <span className="absolute left-2 top-2 py-1.5 px-2 text-[0.7rem] uppercase tracking-wider bg-paper border border-rule">
                   BEFORE
                 </span>
@@ -260,13 +184,14 @@ export default function Projects() {
             </div>
           ))}
         </div>
+        )}
       </div>
 
       {selectedProject && (
         <div
           className="fixed inset-0 z-[1100] flex items-center justify-center p-4 sm:p-6"
           style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
-          onClick={() => setSelectedProject(null)}
+          onClick={() => { setExpandedImage(null); setSelectedProject(null) }}
           role="dialog"
           aria-modal="true"
           aria-labelledby="project-modal-title"
@@ -280,7 +205,7 @@ export default function Projects() {
               <div className="relative pt-14 sm:pt-6 px-6 sm:px-8">
                 <button
                   type="button"
-                  onClick={() => setSelectedProject(null)}
+                  onClick={() => { setExpandedImage(null); setSelectedProject(null) }}
                   className="absolute top-14 right-6 sm:top-6 sm:right-8 w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full text-ink/70 hover:text-ink hover:bg-ink/5 focus:outline-none focus:ring-2 focus:ring-ink/30 focus:ring-offset-2 cursor-pointer transition-colors"
                   aria-label="Close (Escape)"
                 >
@@ -304,16 +229,25 @@ export default function Projects() {
                     BEFORE
                   </p>
                   <div className="space-y-4">
-                    {selectedProject.before.map((src, i) => (
-                      <div key={`before-${i}`} className="rounded-lg overflow-hidden border border-rule-light">
-                        <img
-                          src={src}
-                          alt={`Before ${i + 1}`}
-                          className="w-full aspect-[4/3] object-cover block"
-                          draggable={false}
-                        />
-                      </div>
-                    ))}
+                    {selectedProject.before.length === 0 ? (
+                      <p className="text-sm text-ink-light py-4">No before images for this project.</p>
+                    ) : (
+                      selectedProject.before.map((src, i) => (
+                        <button
+                          key={`before-${i}`}
+                          type="button"
+                          onClick={(e) => { e.stopPropagation(); setExpandedImage({ url: src, alt: `Before ${i + 1}` }) }}
+                          className="rounded-lg overflow-hidden border border-rule-light w-full bg-rule-light/10 block text-left cursor-pointer hover:border-ink-light transition-colors focus:outline-none focus:ring-2 focus:ring-ink/30 focus:ring-offset-2"
+                        >
+                          <img
+                            src={src}
+                            alt={`Before ${i + 1}`}
+                            className="w-full h-auto block pointer-events-none"
+                            draggable={false}
+                          />
+                        </button>
+                      ))
+                    )}
                   </div>
                 </section>
                 <section>
@@ -321,21 +255,68 @@ export default function Projects() {
                     AFTER
                   </p>
                   <div className="space-y-4">
-                    {selectedProject.after.map((src, i) => (
-                      <div key={`after-${i}`} className="rounded-lg overflow-hidden border border-rule-light">
-                        <img
-                          src={src}
-                          alt={`After ${i + 1}`}
-                          className="w-full aspect-[4/3] object-cover block"
-                          draggable={false}
-                        />
-                      </div>
-                    ))}
+                    {selectedProject.after.length === 0 ? (
+                      <p className="text-sm text-ink-light py-4">No after images for this project.</p>
+                    ) : (
+                      selectedProject.after.map((src, i) => (
+                        <button
+                          key={`after-${i}`}
+                          type="button"
+                          onClick={(e) => { e.stopPropagation(); setExpandedImage({ url: src, alt: `After ${i + 1}` }) }}
+                          className="rounded-lg overflow-hidden border border-rule-light w-full bg-rule-light/10 block text-left cursor-pointer hover:border-ink-light transition-colors focus:outline-none focus:ring-2 focus:ring-ink/30 focus:ring-offset-2"
+                        >
+                          <img
+                            src={src}
+                            alt={`After ${i + 1}`}
+                            className="w-full h-auto block pointer-events-none"
+                            draggable={false}
+                          />
+                        </button>
+                      ))
+                    )}
                   </div>
                 </section>
               </div>
             </div>
           </div>
+
+          {/* Full-size image overlay: show at actual pixel dimensions (scroll if larger than viewport) */}
+          {expandedImage && (
+            <div
+              className="fixed inset-0 z-[1200] bg-black/90 overflow-auto"
+              onClick={() => setExpandedImage(null)}
+              role="dialog"
+              aria-modal="true"
+              aria-label="View image full size"
+            >
+              <button
+                type="button"
+                onClick={() => setExpandedImage(null)}
+                className="fixed top-4 right-4 z-[1201] w-11 h-11 flex items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/50"
+                aria-label="Close"
+              >
+                <X size={24} strokeWidth={2} />
+              </button>
+              <div className="inline-block p-4 align-top" onClick={(e) => e.stopPropagation()}>
+                <img
+                  data-fullsize
+                  src={expandedImage.url}
+                  alt={expandedImage.alt}
+                  className="block"
+                  style={{
+                    width: 'auto',
+                    height: 'auto',
+                    maxWidth: 'none',
+                    maxHeight: 'none',
+                    minWidth: 'auto',
+                    minHeight: 'auto',
+                    objectFit: 'none',
+                  }}
+                  draggable={false}
+                />
+              </div>
+            </div>
+          )}
         </div>
       )}
 

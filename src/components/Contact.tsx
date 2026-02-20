@@ -66,6 +66,7 @@ export default function Contact() {
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitSuccess, setSubmitSuccess] = useState(false)
+  const formRef = React.useRef<HTMLFormElement>(null)
 
   const validateEmail = (email: string): boolean => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -101,7 +102,11 @@ export default function Contact() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!validateForm()) return
+    if (!validateForm()) {
+      setSubmitError('Please fix the errors below.')
+      formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      return
+    }
     setSubmitError(null)
     setIsSubmitting(true)
     try {
@@ -122,7 +127,7 @@ export default function Contact() {
       setFormData(initialFormData)
       setErrors({})
       setTimeout(() => setSubmitSuccess(false), 3000)
-    } catch {
+    } catch (err) {
       setSubmitError('Failed to send. Please try again or call us.')
     } finally {
       setIsSubmitting(false)
@@ -193,7 +198,7 @@ export default function Contact() {
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="w-full">
+            <form ref={formRef} onSubmit={handleSubmit} className="w-full">
               <div className="text-lg mt-0 mb-4 pt-0 pb-2 border-b border-rule-light">Personal Information</div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div className="mb-4 md:mb-0">

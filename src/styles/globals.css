@@ -43,9 +43,16 @@
     @apply w-full;
     min-height: calc(100vh - 140px);
   }
-  img {
-    @apply max-w-full h-auto block;
-  }
+}
+/* Lightbox: outside @layer so it wins over Tailwind base; show image at true pixel size */
+img[data-fullsize] {
+  width: auto !important;
+  height: auto !important;
+  max-width: none !important;
+  max-height: none !important;
+  min-width: 0 !important;
+  object-fit: none !important;
+  display: block !important;
 }
 
 @layer components {
