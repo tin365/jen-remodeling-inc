@@ -3,81 +3,124 @@
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { X } from 'lucide-react'
+import { supabase } from '@/lib/supabase'
 
 type ProjectCategory = 'basement' | 'kitchen' | 'bathroom' | 'living-room'
 
 interface Project {
-  id: number
+  id: string
   category: ProjectCategory
   title: string
-  before: string
-  after: string
+  before: string[]
+  after: string[]
   description: string
 }
 
-const projects: Project[] = [
+const staticProjects: Project[] = [
   {
-    id: 1,
+    id: '1',
     category: 'basement',
     title: 'Modern Basement Entertainment Room',
-    before: 'https://images.unsplash.com/photo-1581858726788-75bc0f6a952d?w=800&h=600&fit=crop',
-    after: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=800&h=600&fit=crop',
+    before: ['/istockphoto-1312800260-612x612.jpg'],
+    after: ['/WhatsApp%20Image%202026-02-14%20at%2021.45.33.jpeg'],
     description: 'Transformed an unused basement into a modern entertainment space with custom lighting and built-in shelving.',
   },
   {
-    id: 2,
+    id: '2',
     category: 'kitchen',
     title: 'Contemporary Kitchen Renovation',
-    before: 'https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?w=800&h=600&fit=crop',
-    after: 'https://images.unsplash.com/photo-1556912167-f556f1f39faa?w=800&h=600&fit=crop',
+    before: [
+      'https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?w=800&h=600&fit=crop',
+      'https://images.unsplash.com/photo-1556911220-bff31c812dba?w=800&h=600&fit=crop',
+    ],
+    after: [
+      'https://images.unsplash.com/photo-1556912167-f556f1f39faa?w=800&h=600&fit=crop',
+      'https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?w=800&h=600&fit=crop',
+    ],
     description: 'Complete kitchen overhaul with new cabinets, quartz countertops, and modern appliances.',
   },
   {
-    id: 3,
+    id: '3',
     category: 'bathroom',
     title: 'Luxury Spa Bathroom',
-    before: 'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=800&h=600&fit=crop',
-    after: 'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=800&h=600&fit=crop',
+    before: [
+      'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=800&h=600&fit=crop',
+      'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=800&h=600&fit=crop',
+    ],
+    after: [
+      'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=800&h=600&fit=crop',
+      'https://images.unsplash.com/photo-1600566753151-384129cf4e3e?w=800&h=600&fit=crop',
+    ],
     description: 'Converted outdated bathroom into a luxurious spa retreat with walk-in shower and custom vanity.',
   },
   {
-    id: 4,
+    id: '4',
     category: 'living-room',
     title: 'Open Concept Living Room',
-    before: 'https://images.unsplash.com/photo-1556020685-ae41abfc9365?w=800&h=600&fit=crop',
-    after: 'https://images.unsplash.com/photo-1600210492493-0946911123ea?w=800&h=600&fit=crop',
+    before: [
+      'https://images.unsplash.com/photo-1556020685-ae41abfc9365?w=800&h=600&fit=crop',
+      'https://images.unsplash.com/photo-1556020685-ae41abfc9365?w=800&h=600&fit=crop',
+    ],
+    after: [
+      'https://images.unsplash.com/photo-1600210492493-0946911123ea?w=800&h=600&fit=crop',
+      'https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?w=800&h=600&fit=crop',
+    ],
     description: 'Opened up the living space by removing walls and adding modern hardwood flooring.',
   },
   {
-    id: 5,
+    id: '5',
     category: 'kitchen',
     title: 'Farmhouse Kitchen Remodel',
-    before: 'https://images.unsplash.com/photo-1556911220-bff31c812dba?w=800&h=600&fit=crop',
-    after: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&h=600&fit=crop',
+    before: [
+      'https://images.unsplash.com/photo-1556911220-bff31c812dba?w=800&h=600&fit=crop',
+      'https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?w=800&h=600&fit=crop',
+    ],
+    after: [
+      'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&h=600&fit=crop',
+      'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=800&h=600&fit=crop',
+    ],
     description: 'Classic farmhouse kitchen with shaker cabinets, butcher block island, and subway tile backsplash.',
   },
   {
-    id: 6,
+    id: '6',
     category: 'basement',
     title: 'Basement Home Office',
-    before: 'https://images.unsplash.com/photo-1581858726788-75bc0f6a952d?w=800&h=600&fit=crop',
-    after: 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=800&h=600&fit=crop',
+    before: [
+      'https://images.unsplash.com/photo-1581858726788-75bc0f6a952d?w=800&h=600&fit=crop',
+      'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=800&h=600&fit=crop',
+    ],
+    after: [
+      'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=800&h=600&fit=crop',
+      'https://images.unsplash.com/photo-1600210492493-0946911123ea?w=800&h=600&fit=crop',
+    ],
     description: 'Created a productive home office space with custom built-ins and professional lighting.',
   },
   {
-    id: 7,
+    id: '7',
     category: 'bathroom',
     title: 'Master Bathroom Suite',
-    before: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=800&h=600&fit=crop',
-    after: 'https://images.unsplash.com/photo-1600566753151-384129cf4e3e?w=800&h=600&fit=crop',
+    before: [
+      'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=800&h=600&fit=crop',
+      'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=800&h=600&fit=crop',
+    ],
+    after: [
+      'https://images.unsplash.com/photo-1600566753151-384129cf4e3e?w=800&h=600&fit=crop',
+      'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=800&h=600&fit=crop',
+    ],
     description: 'Luxurious master bathroom with dual vanities, soaking tub, and marble tile.',
   },
   {
-    id: 8,
+    id: '8',
     category: 'living-room',
     title: 'Modern Living Space',
-    before: 'https://images.unsplash.com/photo-1556020685-ae41abfc9365?w=800&h=600&fit=crop',
-    after: 'https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?w=800&h=600&fit=crop',
+    before: [
+      'https://images.unsplash.com/photo-1556020685-ae41abfc9365?w=800&h=600&fit=crop',
+      'https://images.unsplash.com/photo-1556911220-bff31c812dba?w=800&h=600&fit=crop',
+    ],
+    after: [
+      'https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?w=800&h=600&fit=crop',
+      'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=800&h=600&fit=crop',
+    ],
     description: 'Contemporary living room with statement fireplace and custom entertainment center.',
   },
 ]
@@ -93,6 +136,42 @@ const categories: { id: 'all' | ProjectCategory; label: string }[] = [
 export default function Projects() {
   const [activeCategory, setActiveCategory] = useState<'all' | ProjectCategory>('all')
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
+  const [projects, setProjects] = useState<Project[]>(staticProjects)
+
+  useEffect(() => {
+    let cancelled = false
+    async function load() {
+      try {
+        const { data: projectsData } = await supabase
+          .from('projects')
+          .select('id, title, category, description, sort_order')
+          .order('sort_order', { ascending: true })
+        if (cancelled || !projectsData?.length) return
+        const { data: imagesData } = await supabase
+          .from('project_images')
+          .select('project_id, url, label, sort_order')
+          .order('sort_order', { ascending: true })
+        const images = (imagesData ?? []) as { project_id: string; url: string; label: 'before' | 'after'; sort_order: number }[]
+        const merged: Project[] = projectsData.map((p: { id: string; title: string; category: string; description: string }) => {
+          const before = images.filter((i) => i.project_id === p.id && i.label === 'before').sort((a, b) => a.sort_order - b.sort_order).map((i) => i.url)
+          const after = images.filter((i) => i.project_id === p.id && i.label === 'after').sort((a, b) => a.sort_order - b.sort_order).map((i) => i.url)
+          return {
+            id: p.id,
+            category: p.category as ProjectCategory,
+            title: p.title,
+            description: p.description ?? '',
+            before,
+            after,
+          }
+        })
+        setProjects(merged)
+      } catch {
+        // Keep static projects if Supabase unavailable
+      }
+    }
+    load()
+    return () => { cancelled = true }
+  }, [])
 
   const filteredProjects =
     activeCategory === 'all'
@@ -154,12 +233,12 @@ export default function Projects() {
             >
               <div className="relative grid grid-cols-1 md:grid-cols-2 border-b border-rule">
                 <img
-                  src={project.before}
+                  src={project.before[0]}
                   alt={`${project.title} - Before`}
                   className="w-full h-auto block md:border-r border-rule"
                 />
                 <img
-                  src={project.after}
+                  src={project.after[0]}
                   alt={`${project.title} - After`}
                   className="w-full h-auto block"
                 />
@@ -185,51 +264,75 @@ export default function Projects() {
 
       {selectedProject && (
         <div
-          className="fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-3 sm:p-6"
+          className="fixed inset-0 z-[1100] flex items-center justify-center p-4 sm:p-6"
+          style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
           onClick={() => setSelectedProject(null)}
           role="dialog"
           aria-modal="true"
           aria-labelledby="project-modal-title"
         >
           <div
-            className="max-w-content w-full bg-paper p-4 sm:p-8 border border-rule max-h-[90vh] overflow-y-auto relative"
+            className="max-w-content w-full max-h-[90vh] bg-paper relative flex flex-col rounded-2xl shadow-2xl overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            <button
-              type="button"
-              onClick={() => setSelectedProject(null)}
-              className="absolute top-3 right-3 sm:top-4 sm:right-4 text-ink border border-rule p-1.5 sm:p-2 cursor-pointer text-lg sm:text-xl hover:bg-ink hover:text-paper z-10 rounded"
-              aria-label="Close (Escape)"
-            >
-              <X size={24} className="sm:hidden" />
-              <X size={32} className="hidden sm:block" />
-            </button>
-            <div className="mb-6 pb-4 border-b border-rule">
-              <h2 id="project-modal-title" className="text-xl mb-2 pr-10">{selectedProject.title}</h2>
-              <p className="text-[0.95rem] text-ink-light">{selectedProject.description}</p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 border border-rule">
-              <div>
-                <img
-                  src={selectedProject.before}
-                  alt="Before"
-                  className="w-full h-auto block"
-                  draggable={false}
-                />
-                <div className="py-1.5 px-2 text-[0.7rem] uppercase bg-paper border border-rule">
-                  BEFORE
-                </div>
+            <div className="overflow-y-auto flex-1 min-h-0">
+              {/* Extra top padding so close button clears nav bar; close aligned to content grid */}
+              <div className="relative pt-14 sm:pt-6 px-6 sm:px-8">
+                <button
+                  type="button"
+                  onClick={() => setSelectedProject(null)}
+                  className="absolute top-14 right-6 sm:top-6 sm:right-8 w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full text-ink/70 hover:text-ink hover:bg-ink/5 focus:outline-none focus:ring-2 focus:ring-ink/30 focus:ring-offset-2 cursor-pointer transition-colors"
+                  aria-label="Close (Escape)"
+                >
+                  <X size={24} strokeWidth={1.75} />
+                </button>
+                <h2 id="project-modal-title" className="text-xl sm:text-2xl font-bold text-ink pr-14 leading-tight">
+                  {selectedProject.title}
+                </h2>
+                <p className="mt-4 text-[0.95rem] text-ink-light leading-relaxed max-w-[42rem]">
+                  {selectedProject.description}
+                </p>
               </div>
-              <div className="md:border-l border-rule">
-                <img
-                  src={selectedProject.after}
-                  alt="After"
-                  className="w-full h-auto block"
-                  draggable={false}
-                />
-                <div className="py-1.5 px-2 text-[0.7rem] uppercase bg-paper border border-rule">
-                  AFTER
-                </div>
+
+              {/* 1px low-contrast divider aligned to content padding */}
+              <div className="mx-6 sm:mx-8 mt-6 border-t border-rule-light" />
+
+              {/* Photo series: Before section then After section */}
+              <div className="px-6 sm:px-8 pt-6 pb-8 space-y-8">
+                <section>
+                  <p className="text-[0.65rem] font-medium uppercase tracking-[0.2em] text-ink-light mb-3">
+                    BEFORE
+                  </p>
+                  <div className="space-y-4">
+                    {selectedProject.before.map((src, i) => (
+                      <div key={`before-${i}`} className="rounded-lg overflow-hidden border border-rule-light">
+                        <img
+                          src={src}
+                          alt={`Before ${i + 1}`}
+                          className="w-full aspect-[4/3] object-cover block"
+                          draggable={false}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </section>
+                <section>
+                  <p className="text-[0.65rem] font-medium uppercase tracking-[0.2em] text-ink-light mb-3">
+                    AFTER
+                  </p>
+                  <div className="space-y-4">
+                    {selectedProject.after.map((src, i) => (
+                      <div key={`after-${i}`} className="rounded-lg overflow-hidden border border-rule-light">
+                        <img
+                          src={src}
+                          alt={`After ${i + 1}`}
+                          className="w-full aspect-[4/3] object-cover block"
+                          draggable={false}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </section>
               </div>
             </div>
           </div>

@@ -2,6 +2,10 @@
  * Serves the production export so it works with basePath.
  * Copies out/ to out-preview/jen-remodeling-inc/ so that
  * http://localhost:3000/jen-remodeling-inc/ serves the site and assets resolve.
+ *
+ * Important: Run "npm run build" first, and ensure .env.local has
+ * NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY so the built
+ * bundle can talk to Supabase (admin uploads, projects, etc.).
  */
 const fs = require('fs')
 const path = require('path')

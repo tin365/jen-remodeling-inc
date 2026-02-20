@@ -31,10 +31,35 @@ CREATE TABLE IF NOT EXISTS admin_users (
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
+-- Projects (portfolio): admins manage; public reads
+CREATE TABLE IF NOT EXISTS projects (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title TEXT NOT NULL,
+  category TEXT NOT NULL CHECK (category IN ('basement', 'kitchen', 'bathroom', 'living-room')),
+  description TEXT NOT NULL DEFAULT '',
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS project_images (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  project_id UUID NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  url TEXT NOT NULL,
+  label TEXT NOT NULL CHECK (label IN ('before', 'after')),
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_project_images_project_id ON project_images(project_id);
+CREATE INDEX IF NOT EXISTS idx_projects_sort ON projects(sort_order);
+
 -- 2. Enable RLS
 ALTER TABLE contact_submissions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE reviews ENABLE ROW LEVEL SECURITY;
 ALTER TABLE admin_users ENABLE ROW LEVEL SECURITY;
+ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
+ALTER TABLE project_images ENABLE ROW LEVEL SECURITY;
 
 -- 3. Contact submissions: anon insert
 DROP POLICY IF EXISTS "Allow anonymous insert on contact_submissions" ON contact_submissions;
@@ -80,6 +105,28 @@ DROP POLICY IF EXISTS "Admins can delete reviews" ON reviews;
 CREATE POLICY "Admins can delete reviews"
   ON reviews FOR DELETE TO authenticated
   USING (EXISTS (SELECT 1 FROM admin_users WHERE user_id = auth.uid()));
+
+-- Projects: public read; admins full CRUD
+DROP POLICY IF EXISTS "Public can read projects" ON projects;
+CREATE POLICY "Public can read projects"
+  ON projects FOR SELECT TO anon USING (true);
+
+DROP POLICY IF EXISTS "Admins can manage projects" ON projects;
+CREATE POLICY "Admins can manage projects"
+  ON projects FOR ALL TO authenticated
+  USING (EXISTS (SELECT 1 FROM admin_users WHERE user_id = auth.uid()))
+  WITH CHECK (EXISTS (SELECT 1 FROM admin_users WHERE user_id = auth.uid()));
+
+-- Project images: public read; admins full CRUD
+DROP POLICY IF EXISTS "Public can read project_images" ON project_images;
+CREATE POLICY "Public can read project_images"
+  ON project_images FOR SELECT TO anon USING (true);
+
+DROP POLICY IF EXISTS "Admins can manage project_images" ON project_images;
+CREATE POLICY "Admins can manage project_images"
+  ON project_images FOR ALL TO authenticated
+  USING (EXISTS (SELECT 1 FROM admin_users WHERE user_id = auth.uid()))
+  WITH CHECK (EXISTS (SELECT 1 FROM admin_users WHERE user_id = auth.uid()));
 
 -- 8. Add your admin user (run after that user exists in Authentication → Users)
 INSERT INTO admin_users (user_id) VALUES ('24764d28-21b5-423f-96e0-1fcbf8820c8a')
