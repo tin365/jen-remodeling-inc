@@ -46,6 +46,15 @@ type ProjectImageRow = {
   sort_order: number
 }
 
+type ErrorLogRow = {
+  id: string
+  message: string
+  stack: string | null
+  url: string | null
+  source: string | null
+  created_at: string
+}
+
 const generateStars = (rating: number) =>
   Array.from({ length: 5 }, (_, i) => (i < rating ? '★' : '☆')).join('')
 
@@ -60,11 +69,14 @@ export default function AdminPageClient() {
   const [reviews, setReviews] = useState<ReviewRow[]>([])
   const [contactsLoading, setContactsLoading] = useState(false)
   const [reviewsLoading, setReviewsLoading] = useState(false)
-  const [activeTab, setActiveTab] = useState<'contacts' | 'reviews' | 'projects'>('contacts')
+  const [activeTab, setActiveTab] = useState<'contacts' | 'reviews' | 'projects' | 'errors'>('contacts')
   const [deletingId, setDeletingId] = useState<string | null>(null)
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [expandedContact, setExpandedContact] = useState<string | null>(null)
+  const [errorLogs, setErrorLogs] = useState<ErrorLogRow[]>([])
+  const [errorLogsLoading, setErrorLogsLoading] = useState(false)
+  const [expandedErrorId, setExpandedErrorId] = useState<string | null>(null)
 
   const [projects, setProjects] = useState<ProjectRow[]>([])
   const [projectImages, setProjectImages] = useState<ProjectImageRow[]>([])
@@ -125,12 +137,24 @@ export default function AdminPageClient() {
     setProjectsLoading(false)
   }, [])
 
+  const loadErrorLogs = useCallback(async () => {
+    setErrorLogsLoading(true)
+    const { data } = await supabase
+      .from('error_logs')
+      .select('id, message, stack, url, source, created_at')
+      .order('created_at', { ascending: false })
+      .limit(100)
+    setErrorLogs((data ?? []) as ErrorLogRow[])
+    setErrorLogsLoading(false)
+  }, [])
+
   useEffect(() => {
     if (!session) return
     loadContacts()
     loadReviews()
     loadProjects()
-  }, [session, loadContacts, loadReviews, loadProjects])
+    loadErrorLogs()
+  }, [session, loadContacts, loadReviews, loadProjects, loadErrorLogs])
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -405,6 +429,13 @@ export default function AdminPageClient() {
               >
                 Projects{projects.length > 0 && ` (${projects.length})`}
               </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab('errors')}
+                className={`px-3 py-1.5 rounded text-sm transition-colors border ${activeTab === 'errors' ? 'bg-amber-800 text-amber-50 border-amber-900' : 'text-stone-600 border-amber-200 hover:bg-amber-100 hover:text-stone-800'}`}
+              >
+                Errors{errorLogs.length > 0 && ` (${errorLogs.length})`}
+              </button>
             </nav>
           </div>
           {/* Desktop right */}
@@ -453,6 +484,13 @@ export default function AdminPageClient() {
             >
               Projects{projects.length > 0 && ` (${projects.length})`}
             </button>
+            <button
+              type="button"
+              onClick={() => { setActiveTab('errors'); setMobileMenuOpen(false) }}
+              className={`block w-full text-left px-3 py-2 rounded text-sm border ${activeTab === 'errors' ? 'bg-amber-200 text-stone-800 border-amber-400' : 'text-stone-600 border-transparent'}`}
+            >
+              Errors{errorLogs.length > 0 && ` (${errorLogs.length})`}
+            </button>
             <div className="border-t border-amber-200 pt-2 mt-2 space-y-1">
               <p className="px-3 text-xs text-stone-500 truncate">{session.user.email}</p>
               <Link href="/" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-1.5 text-sm text-stone-600 hover:text-stone-800">View site</Link>
@@ -482,6 +520,13 @@ export default function AdminPageClient() {
             className={`flex-1 py-2.5 text-xs text-center transition-colors ${activeTab === 'projects' ? 'text-stone-800 border-b-2 border-amber-700 font-semibold' : 'text-stone-500'}`}
           >
             Projects
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('errors')}
+            className={`flex-1 py-2.5 text-xs text-center transition-colors ${activeTab === 'errors' ? 'text-stone-800 border-b-2 border-amber-700 font-semibold' : 'text-stone-500'}`}
+          >
+            Errors
           </button>
         </div>
       </header>
@@ -890,6 +935,68 @@ export default function AdminPageClient() {
                               ))}
                             </div>
                           </div>
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+            )}
+          </section>
+        )}
+
+        {/* ─── Errors tab ─── */}
+        {activeTab === 'errors' && (
+          <section>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg sm:text-xl font-bold text-stone-800">Error logs</h2>
+              <button
+                type="button"
+                onClick={loadErrorLogs}
+                className="text-xs text-stone-600 hover:text-stone-800 transition-colors px-2 py-1 rounded border border-amber-300 hover:bg-amber-100"
+              >
+                Refresh
+              </button>
+            </div>
+            {errorLogsLoading ? (
+              <div className="flex justify-center py-12">
+                <div className="w-6 h-6 border-2 border-amber-300 border-t-amber-700 rounded-full animate-spin" />
+              </div>
+            ) : errorLogs.length === 0 ? (
+              <div className="text-center py-12 border-2 border-dashed border-amber-300 rounded-lg bg-white/60">
+                <p className="text-stone-500">No errors logged yet.</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {errorLogs.map((e) => {
+                  const isExpanded = expandedErrorId === e.id
+                  return (
+                    <div
+                      key={e.id}
+                      className="border-2 border-amber-200 rounded-lg bg-white/80 overflow-hidden"
+                    >
+                      <div
+                        className="p-4 cursor-pointer"
+                        onClick={() => setExpandedErrorId(isExpanded ? null : e.id)}
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0 flex-1">
+                            <p className="font-medium text-sm text-stone-800 break-words">{e.message}</p>
+                            <div className="flex flex-wrap items-center gap-2 mt-1">
+                              <span className="text-xs text-stone-500">{formatDate(e.created_at)}</span>
+                              {e.source && <span className="inline-block px-2 py-0.5 bg-amber-100 border border-amber-300 rounded text-[10px] text-stone-700">{e.source}</span>}
+                            </div>
+                            {e.url && <p className="text-xs text-stone-500 truncate mt-0.5">{e.url}</p>}
+                          </div>
+                          <svg className={`w-4 h-4 text-stone-500 shrink-0 ${isExpanded ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </div>
+                      </div>
+                      {isExpanded && e.stack && (
+                        <div className="px-4 pb-4 border-t border-amber-200 pt-3 bg-amber-50/50">
+                          <p className="text-xs font-medium text-stone-600 mb-1">Stack trace</p>
+                          <pre className="text-xs text-stone-700 whitespace-pre-wrap break-words font-mono overflow-x-auto p-3 rounded bg-white border border-amber-200">{e.stack}</pre>
                         </div>
                       )}
                     </div>

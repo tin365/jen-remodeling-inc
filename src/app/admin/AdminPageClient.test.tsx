@@ -36,12 +36,23 @@ vi.mock('@/lib/supabase', () => {
     }),
     update: vi.fn().mockReturnValue({ eq: vi.fn().mockResolvedValue(undefined) }),
   })
+  const chainWithLimit = (result: unknown) => ({
+    select: vi.fn().mockReturnValue({
+      order: vi.fn().mockReturnValue({
+        limit: vi.fn().mockResolvedValue({ data: result }),
+      }),
+    }),
+    delete: vi.fn().mockReturnValue({ eq: deleteEqMock }),
+    insert: vi.fn().mockReturnValue({ select: vi.fn().mockReturnValue({ single: vi.fn().mockResolvedValue({ data: null }) }) }),
+    update: vi.fn().mockReturnValue({ eq: vi.fn().mockResolvedValue(undefined) }),
+  })
   return {
     supabase: {
       from: (table: string) => {
         if (table === 'contact_submissions') {
           return chain(contactsDataRef.current)
         }
+        if (table === 'error_logs') return chainWithLimit([])
         if (table === 'reviews') return chain([])
         if (table === 'projects') return chain([])
         if (table === 'project_images') return chain([])

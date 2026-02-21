@@ -146,6 +146,20 @@ Deno.serve(async (req: Request): Promise<Response> => {
     const formatted = formatReviewEmail(data)
     subject = type === 'INSERT' ? formatted.subject : `[JEN Site] Review updated: ${sanitizeSubject(String(data.name ?? ''))}`
     html = formatted.html
+  } else if (table === 'error_logs' && data && (type === 'INSERT' || type === 'UPDATE')) {
+    const message = sanitizeSubject(String(data.message ?? 'Unknown error'))
+    const url = data.url ? String(data.url) : ''
+    const source = data.source ? String(data.source) : ''
+    const stack = data.stack ? String(data.stack) : ''
+    subject = `[JEN Site] New error: ${message}`
+    html = `
+      <h2>Client error reported</h2>
+      <p><strong>Message:</strong></p>
+      <pre style="white-space:pre-wrap;font-family:inherit;">${escapeHtml(String(data.message ?? ''))}</pre>
+      ${url ? `<p><strong>URL:</strong> <a href="${escapeHtml(url)}">${escapeHtml(url)}</a></p>` : ''}
+      ${source ? `<p><strong>Source:</strong> ${escapeHtml(source)}</p>` : ''}
+      ${stack ? `<p><strong>Stack:</strong></p><pre style="white-space:pre-wrap;font-family:inherit;">${escapeHtml(stack)}</pre>` : ''}
+    `.trim()
   } else if (table === 'projects' || table === 'project_images') {
     subject = `[JEN Site] Change: ${table} ${type}`
     html = `<p>Table: ${table}, Event: ${type}</p><pre>${JSON.stringify(data ?? {}, null, 2)}</pre>`

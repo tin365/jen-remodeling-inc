@@ -120,7 +120,7 @@ export default function Contact() {
       setErrors({})
       setTimeout(() => setSubmitSuccess(false), 3000)
     } catch (err) {
-      reportError(err)
+      reportError(err, 'contact_form')
       setSubmitError('Failed to send. Please try again or call us.')
     } finally {
       setIsSubmitting(false)
