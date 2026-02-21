@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import { submitContact } from '@/lib/api'
 import { reportError } from '@/lib/error-reporting'
+import { validateContactForm } from '@/lib/contact-validation'
 
 interface ContactFormData {
   name: string
@@ -69,30 +70,16 @@ export default function Contact() {
   const [submitSuccess, setSubmitSuccess] = useState(false)
   const formRef = React.useRef<HTMLFormElement>(null)
 
-  const validateEmail = (email: string): boolean => {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    return re.test(email)
-  }
-
-  const validatePhone = (phone: string): boolean => {
-    const re = /^[\d\s\-()]+$/
-    return phone.length >= 10 && re.test(phone)
-  }
-
   const validateForm = (): boolean => {
-    const newErrors: FormErrors = {}
-    if (!formData.name.trim()) newErrors.name = 'Name is required'
-    if (!formData.email.trim()) newErrors.email = 'Email is required'
-    else if (!validateEmail(formData.email)) newErrors.email = 'Please enter a valid email address'
-    if (!formData.phone.trim()) newErrors.phone = 'Phone number is required'
-    else if (!validatePhone(formData.phone)) newErrors.phone = 'Please enter a valid phone number'
-    if (!formData.service) newErrors.service = 'Please select a service'
-    if (!formData.message.trim()) newErrors.message = 'Please tell us about your project'
-    else if (formData.message.trim().length < 20) newErrors.message = 'Please provide more details (at least 20 characters)'
-    else if (formData.message.trim().length > 10000) newErrors.message = 'Message is too long (max 10,000 characters)'
-    if (formData.name.trim().length > 200) newErrors.name = 'Name is too long'
+    const { errors: newErrors, valid } = validateContactForm({
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      service: formData.service,
+      message: formData.message,
+    })
     setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
+    return valid
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -107,7 +94,9 @@ export default function Contact() {
     e.preventDefault()
     if (!validateForm()) {
       setSubmitError('Please fix the errors below.')
-      formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      if (typeof formRef.current?.scrollIntoView === 'function') {
+        formRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }
       return
     }
     setSubmitError(null)

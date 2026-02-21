@@ -1,6 +1,7 @@
 // Supabase Edge Function: send email notification when DB changes (e.g. new contact, new review).
 // Uses Resend (https://resend.com). Set RESEND_API_KEY and NOTIFICATION_EMAIL in Supabase secrets.
 // Optional: WEBHOOK_SECRET to require x-webhook-secret header; ALLOWED_ORIGIN to restrict CORS.
+// Note: sanitizeSubject/escapeHtml/format logic is mirrored in src/lib/notification-format.ts (tested with Vitest).
 
 const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')
 const NOTIFICATION_EMAIL = Deno.env.get('NOTIFICATION_EMAIL') // Your email to receive notifications
