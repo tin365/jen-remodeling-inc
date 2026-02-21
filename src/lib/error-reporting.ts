@@ -23,10 +23,9 @@ export function reportError(error: unknown, source?: string): void {
       url,
       source: source ?? null,
     }
-    supabase
+    void supabase
       .from('error_logs')
       .insert(payload)
-      .then(() => {})
-      .catch(() => {})
+      .then(() => {}, () => {})
   }
 }
