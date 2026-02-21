@@ -130,7 +130,7 @@ export default function Landing() {
             <Link href="/projects">View Our Portfolio</Link>
           </p>
           <p className="text-sm text-ink-light mt-4">
-            Call (123) 456-7890 · info@jenremodeling.com · Mon–Fri 8AM–6PM
+            Call +60 17-439 8540 · info@jenremodeling.com · Mon–Fri 8AM–6PM
           </p>
         </div>
       </section>

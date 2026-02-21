@@ -90,7 +90,7 @@ export default function Services() {
           <p className="mb-6">Expert remodeling services for every room in your house. Quality craftsmanship, stunning results.</p>
           <div className="flex flex-wrap justify-center gap-4 sm:flex-row sm:flex-nowrap">
             <Link href="/contact" className={`${btn} ${btnPrimary}`}>Get Free Estimate</Link>
-            <a href="tel:+1234567890" className={`${btn} ${btnSecondary}`}>Call Now</a>
+            <a href="tel:+60174398540" className={`${btn} ${btnSecondary}`}>Call Now</a>
           </div>
         </div>
       </section>
@@ -139,7 +139,7 @@ export default function Services() {
             <div>
               <div className="text-2xl block mb-2">📞</div>
               <h3 className="text-xs uppercase tracking-wider font-normal text-ink-light mb-1">Call Us</h3>
-              <p className="text-sm text-ink"><a href="tel:+1234567890">(123) 456-7890</a></p>
+              <p className="text-sm text-ink"><a href="tel:+60174398540">+60 17-439 8540</a></p>
             </div>
             <div>
               <div className="text-2xl block mb-2">✉️</div>

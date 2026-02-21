@@ -293,8 +293,8 @@ export default function Projects() {
             <Link href="/contact" className={`${ctaBtn} bg-ink text-paper hover:bg-ink-light hover:border-ink-light`}>
               Get Free Estimate
             </Link>
-            <a href="tel:+1234567890" className={`${ctaBtn} bg-transparent text-ink hover:bg-ink hover:text-white`}>
-              Call (123) 456-7890
+            <a href="tel:+60174398540" className={`${ctaBtn} bg-transparent text-ink hover:bg-ink hover:text-white`}>
+              Call +60 17-439 8540
             </a>
           </div>
         </div>

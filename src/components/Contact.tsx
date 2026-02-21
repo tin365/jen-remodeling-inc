@@ -158,7 +158,7 @@ export default function Contact() {
             <div className="p-3 sm:p-6 border border-rule-light text-center">
               <span className="text-xl sm:text-2xl block mb-2 sm:mb-3">📞</span>
               <h3 className="text-sm sm:text-base mb-1 sm:mb-2">Call Us</h3>
-              <p className="text-xs sm:text-[0.95rem]"><a href="tel:+1234567890" className="text-ink underline hover:decoration-2">(123) 456-7890</a></p>
+              <p className="text-xs sm:text-[0.95rem]"><a href="tel:+60174398540" className="text-ink underline hover:decoration-2">+60 17-439 8540</a></p>
               <p className="text-xs sm:text-sm text-ink-light hidden sm:block">Mon-Fri: 8AM - 6PM</p>
             </div>
             <div className="p-3 sm:p-6 border border-rule-light text-center">
@@ -219,7 +219,7 @@ export default function Contact() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div className="mb-4 md:mb-0">
                   <label htmlFor="phone" className="block text-sm mb-1.5">Phone Number *</label>
-                  <input type="tel" id="phone" name="phone" value={formData.phone} onChange={handleChange} className={`${inputBase} border-rule ${errors.phone ? inputError : ''}`} placeholder="(123) 456-7890" />
+                  <input type="tel" id="phone" name="phone" value={formData.phone} onChange={handleChange} className={`${inputBase} border-rule ${errors.phone ? inputError : ''}`} placeholder="+60 17-439 8540" />
                   {errors.phone && <span className="text-ink text-sm mt-1 block">{errors.phone}</span>}
                 </div>
                 <div>
