@@ -1,19 +1,10 @@
 'use client'
 
 import React, { useState, useEffect, useCallback } from 'react'
-import { supabase } from '@/lib/supabase'
-
-type ReviewService = 'basement' | 'kitchen' | 'bathroom' | 'living-room' | 'other'
-
-interface Review {
-  id: string
-  name: string
-  service: ReviewService
-  rating: number
-  date: string
-  text: string
-  helpful: number
-}
+import { submitReview } from '@/lib/api'
+import { useReviews } from '@/hooks/useReviews'
+import type { ReviewService } from '@/lib/types'
+import ReviewsSkeleton from '@/components/ReviewsSkeleton'
 
 interface ReviewFormData {
   name: string
@@ -30,14 +21,14 @@ const initialFormData: ReviewFormData = {
 }
 
 export default function Reviews() {
-  const [reviews, setReviews] = useState<Review[]>([])
-  const [loading, setLoading] = useState(true)
+  const { reviews, loading, refetch } = useReviews()
   const [currentFilter, setCurrentFilter] = useState<'all' | ReviewService>('all')
   const [displayedReviews, setDisplayedReviews] = useState(6)
   const [helpfulClicks, setHelpfulClicks] = useState<Record<string, boolean>>({})
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [formData, setFormData] = useState<ReviewFormData>(initialFormData)
   const [showSuccess, setShowSuccess] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
 
 
   const calculateOverallRating = useCallback(() => {
@@ -88,6 +79,7 @@ export default function Reviews() {
   const closeModal = () => {
     setIsModalOpen(false)
     setFormData(initialFormData)
+    setSubmitError(null)
     if (typeof document !== 'undefined') {
       document.body.style.overflow = 'auto'
     }
@@ -96,33 +88,14 @@ export default function Reviews() {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
+    if (submitError) setSubmitError(null)
   }
 
   const handleStarClick = (rating: number) => {
     setFormData((prev) => ({ ...prev, rating }))
+    if (submitError) setSubmitError(null)
   }
 
-  const fetchReviews = useCallback(async () => {
-    const { data, error } = await supabase
-      .from('reviews')
-      .select('id, name, service, rating, "text", helpful, created_at')
-      .order('created_at', { ascending: false })
-    if (error) return
-    const mapped: Review[] = (data ?? []).map((r) => ({
-      id: r.id,
-      name: r.name,
-      service: r.service as ReviewService,
-      rating: r.rating,
-      date: r.created_at.split('T')[0],
-      text: r.text,
-      helpful: r.helpful ?? 0,
-    }))
-    setReviews(mapped)
-  }, [])
-
-  useEffect(() => {
-    fetchReviews().finally(() => setLoading(false))
-  }, [fetchReviews])
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -140,39 +113,32 @@ export default function Reviews() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setSubmitError(null)
     if (!formData.rating) {
-      alert('Please select a rating')
+      setSubmitError('Please select a rating.')
+      return
+    }
+    if (formData.text.trim().length > 5000) {
+      setSubmitError('Review text is too long (max 5,000 characters).')
       return
     }
     try {
-      const { data, error } = await supabase
-        .from('reviews')
-        .insert({
-          name: formData.name.trim(),
-          service: formData.service,
-          rating: formData.rating,
-          text: formData.text.trim(),
-        })
-        .select('id, name, service, rating, "text", helpful, created_at')
-        .single()
+      const { data, error } = await submitReview({
+        name: formData.name.trim(),
+        service: formData.service,
+        rating: formData.rating,
+        text: formData.text.trim(),
+      })
       if (error) throw error
-      const newReview: Review = {
-        id: data.id,
-        name: data.name,
-        service: data.service as ReviewService,
-        rating: data.rating,
-        date: data.created_at.split('T')[0],
-        text: data.text,
-        helpful: data.helpful ?? 0,
-      }
-      setReviews((prev) => [newReview, ...prev])
       setShowSuccess(true)
+      setSubmitError(null)
       closeModal()
       setFormData(initialFormData)
       setDisplayedReviews(6)
+      if (data) void refetch()
       setTimeout(() => setShowSuccess(false), 1500)
     } catch {
-      alert('Failed to submit review. Please try again.')
+      setSubmitError('Failed to submit review. Please try again.')
     }
   }
 
@@ -215,7 +181,7 @@ export default function Reviews() {
 
           <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 p-4 sm:p-6 border border-rule mb-6 sm:mb-8">
             {loading ? (
-              <p className="text-ink-light">Loading reviews...</p>
+              <div className="h-12 w-48 bg-rule-light/20 rounded animate-pulse" aria-hidden />
             ) : (
               <>
                 <div className="text-2xl">{generateStars(Math.floor(overallRating.avg))}</div>
@@ -236,11 +202,11 @@ export default function Reviews() {
           </div>
 
           <div className="grid gap-6 mb-8">
-            {loading && <p className="text-ink-light">Loading reviews...</p>}
+            {loading && <ReviewsSkeleton />}
             {!loading && reviewsToShow.length === 0 && (
               <p className="text-ink-light text-center py-8">No reviews yet. Be the first to share your experience!</p>
             )}
-            {reviewsToShow.map((review, index) => {
+            {!loading && reviewsToShow.map((review, index) => {
               const initials = review.name.split(' ').map((n) => n[0]).join('')
               const formattedDate = formatDate(review.date)
               const isHelpful = helpfulClicks[review.id]
@@ -274,7 +240,7 @@ export default function Reviews() {
             })}
           </div>
 
-          {hasMore && (
+          {!loading && hasMore && (
             <div className="text-center mt-8">
               <button
                 type="button"
@@ -301,6 +267,11 @@ export default function Reviews() {
         >
           <button type="button" className="absolute top-4 right-4 bg-transparent border border-rule p-1.5 cursor-pointer text-xl text-ink hover:bg-ink hover:text-white rounded" onClick={closeModal} aria-label="Close (Escape)">&times;</button>
           <h2 className="text-2xl mb-6 pb-3 border-b border-rule">Write a Review</h2>
+          {submitError && (
+            <div className="bg-ink/10 border border-ink text-ink p-4 mb-4 text-center text-[0.95rem]" role="alert">
+              {submitError}
+            </div>
+          )}
           {showSuccess && (
             <div className="bg-ink text-paper p-4 mb-4 text-center text-[0.95rem]">
               ✓ Thank you! Your review has been submitted successfully.

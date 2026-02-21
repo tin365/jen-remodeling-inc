@@ -1,7 +1,8 @@
 'use client'
 
 import React, { useState } from 'react'
-import { supabase } from '@/lib/supabase'
+import { submitContact } from '@/lib/api'
+import { reportError } from '@/lib/error-reporting'
 
 interface ContactFormData {
   name: string
@@ -88,6 +89,8 @@ export default function Contact() {
     if (!formData.service) newErrors.service = 'Please select a service'
     if (!formData.message.trim()) newErrors.message = 'Please tell us about your project'
     else if (formData.message.trim().length < 20) newErrors.message = 'Please provide more details (at least 20 characters)'
+    else if (formData.message.trim().length > 10000) newErrors.message = 'Message is too long (max 10,000 characters)'
+    if (formData.name.trim().length > 200) newErrors.name = 'Name is too long'
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
@@ -110,7 +113,7 @@ export default function Contact() {
     setSubmitError(null)
     setIsSubmitting(true)
     try {
-      const { error } = await supabase.from('contact_submissions').insert({
+      const { error } = await submitContact({
         name: formData.name.trim(),
         email: formData.email.trim(),
         phone: formData.phone.trim(),
@@ -128,6 +131,7 @@ export default function Contact() {
       setErrors({})
       setTimeout(() => setSubmitSuccess(false), 3000)
     } catch (err) {
+      reportError(err)
       setSubmitError('Failed to send. Please try again or call us.')
     } finally {
       setIsSubmitting(false)

@@ -1,5 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function Landing() {
   return (
@@ -60,9 +61,11 @@ export default function Landing() {
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
             <div className="border border-rule">
-              <img
+              <Image
                 src="https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?w=800&h=600&fit=crop"
                 alt="Before — Kitchen Remodel"
+                width={800}
+                height={600}
                 className="w-full h-auto block"
               />
               <span className="block py-2 px-2 text-xs uppercase tracking-wider border-t border-rule text-center">
@@ -70,9 +73,11 @@ export default function Landing() {
               </span>
             </div>
             <div className="border border-rule">
-              <img
+              <Image
                 src="https://images.unsplash.com/photo-1556912167-f556f1f39faa?w=800&h=600&fit=crop"
                 alt="After — Kitchen Remodel"
+                width={800}
+                height={600}
                 className="w-full h-auto block"
               />
               <span className="block py-2 px-2 text-xs uppercase tracking-wider border-t border-rule text-center">

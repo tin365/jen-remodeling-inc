@@ -26,12 +26,13 @@ export async function getAdminSession(): Promise<AdminSession | null> {
 export async function signInAdmin(email: string, password: string): Promise<{ error: string | null }> {
   const { data: { user }, error: authError } = await supabase.auth.signInWithPassword({ email, password })
   if (authError) {
-    if (authError.message.toLowerCase().includes('invalid')) {
+    const msg = authError.message.toLowerCase()
+    if (msg.includes('invalid') || msg.includes('credentials') || msg.includes('email') || msg.includes('password')) {
       return { error: 'Invalid email or password.' }
     }
-    return { error: authError.message }
+    return { error: 'Sign in failed. Please try again.' }
   }
-  if (!user) return { error: 'Sign in failed.' }
+  if (!user) return { error: 'Sign in failed. Please try again.' }
 
   const { data } = await supabase
     .from('admin_users')

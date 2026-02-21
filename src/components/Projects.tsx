@@ -2,19 +2,11 @@
 
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { X } from 'lucide-react'
-import { supabase } from '@/lib/supabase'
-
-type ProjectCategory = 'basement' | 'kitchen' | 'bathroom' | 'living-room'
-
-interface Project {
-  id: string
-  category: ProjectCategory
-  title: string
-  before: string[]
-  after: string[]
-  description: string
-}
+import { useProjects } from '@/hooks/useProjects'
+import type { Project, ProjectCategory } from '@/lib/types'
+import ProjectsSkeleton from '@/components/ProjectsSkeleton'
 
 const categories: { id: 'all' | ProjectCategory; label: string }[] = [
   { id: 'all', label: 'All Projects' },
@@ -25,53 +17,10 @@ const categories: { id: 'all' | ProjectCategory; label: string }[] = [
 ]
 
 export default function Projects() {
+  const { projects, loading, error } = useProjects()
   const [activeCategory, setActiveCategory] = useState<'all' | ProjectCategory>('all')
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [expandedImage, setExpandedImage] = useState<{ url: string; alt: string } | null>(null)
-  const [projects, setProjects] = useState<Project[]>([])
-  const [projectsReady, setProjectsReady] = useState(false)
-
-  useEffect(() => {
-    let cancelled = false
-    async function load() {
-      try {
-        const { data: projectsData } = await supabase
-          .from('projects')
-          .select('id, title, category, description, sort_order')
-          .order('sort_order', { ascending: true })
-        if (cancelled) return
-        if (!projectsData?.length) {
-          setProjects([])
-          setProjectsReady(true)
-          return
-        }
-        const { data: imagesData } = await supabase
-          .from('project_images')
-          .select('project_id, url, label, sort_order')
-          .order('sort_order', { ascending: true })
-        const images = (imagesData ?? []) as { project_id: string; url: string; label: 'before' | 'after'; sort_order: number }[]
-        const merged: Project[] = projectsData.map((p: { id: string; title: string; category: string; description: string }) => {
-          const before = images.filter((i) => i.project_id === p.id && i.label === 'before').sort((a, b) => a.sort_order - b.sort_order).map((i) => i.url)
-          const after = images.filter((i) => i.project_id === p.id && i.label === 'after').sort((a, b) => a.sort_order - b.sort_order).map((i) => i.url)
-          return {
-            id: p.id,
-            category: p.category as ProjectCategory,
-            title: p.title,
-            description: p.description ?? '',
-            before,
-            after,
-          }
-        })
-        setProjects(merged)
-        setProjectsReady(true)
-      } catch {
-        setProjects([])
-        setProjectsReady(true)
-      }
-    }
-    load()
-    return () => { cancelled = true }
-  }, [])
 
   const filteredProjects =
     activeCategory === 'all'
@@ -126,9 +75,11 @@ export default function Projects() {
       </div>
 
       <div className="max-w-content mx-auto py-6 sm:py-8 px-4 sm:px-6">
-        {!projectsReady ? (
+        {loading ? (
+          <ProjectsSkeleton />
+        ) : error ? (
           <div className="flex items-center justify-center py-16 text-ink-light">
-            <p className="text-sm">Loading projects…</p>
+            <p className="text-sm">Unable to load projects. Please try again later.</p>
           </div>
         ) : filteredProjects.length === 0 ? (
           <div className="flex items-center justify-center py-16 text-ink-light">
@@ -144,23 +95,27 @@ export default function Projects() {
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <div className="relative grid grid-cols-1 md:grid-cols-2 border-b border-rule">
-                <div className="w-full aspect-[4/3] bg-rule-light/10 overflow-hidden md:border-r border-rule flex items-center justify-center">
+                <div className="relative w-full aspect-[4/3] bg-rule-light/10 overflow-hidden md:border-r border-rule flex items-center justify-center">
                   {project.before[0] ? (
-                    <img
+                    <Image
                       src={project.before[0]}
                       alt={`${project.title} - Before`}
-                      className="w-full h-full object-cover block"
+                      fill
+                      className="object-cover block"
+                      sizes="(max-width: 768px) 100vw, 50vw"
                     />
                   ) : (
                     <span className="text-ink-light text-sm">No before image</span>
                   )}
                 </div>
-                <div className="w-full aspect-[4/3] bg-rule-light/10 overflow-hidden flex items-center justify-center">
+                <div className="relative w-full aspect-[4/3] bg-rule-light/10 overflow-hidden flex items-center justify-center">
                   {project.after[0] ? (
-                    <img
+                    <Image
                       src={project.after[0]}
                       alt={`${project.title} - After`}
-                      className="w-full h-full object-cover block"
+                      fill
+                      className="object-cover block"
+                      sizes="(max-width: 768px) 100vw, 50vw"
                     />
                   ) : (
                     <span className="text-ink-light text-sm">No after image</span>
@@ -239,11 +194,14 @@ export default function Projects() {
                           onClick={(e) => { e.stopPropagation(); setExpandedImage({ url: src, alt: `Before ${i + 1}` }) }}
                           className="rounded-lg overflow-hidden border border-rule-light w-full bg-rule-light/10 block text-left cursor-pointer hover:border-ink-light transition-colors focus:outline-none focus:ring-2 focus:ring-ink/30 focus:ring-offset-2"
                         >
-                          <img
+                          <Image
                             src={src}
                             alt={`Before ${i + 1}`}
+                            width={800}
+                            height={600}
                             className="w-full h-auto block pointer-events-none"
                             draggable={false}
+                            sizes="(max-width: 768px) 100vw, 42rem"
                           />
                         </button>
                       ))
@@ -265,11 +223,14 @@ export default function Projects() {
                           onClick={(e) => { e.stopPropagation(); setExpandedImage({ url: src, alt: `After ${i + 1}` }) }}
                           className="rounded-lg overflow-hidden border border-rule-light w-full bg-rule-light/10 block text-left cursor-pointer hover:border-ink-light transition-colors focus:outline-none focus:ring-2 focus:ring-ink/30 focus:ring-offset-2"
                         >
-                          <img
+                          <Image
                             src={src}
                             alt={`After ${i + 1}`}
+                            width={800}
+                            height={600}
                             className="w-full h-auto block pointer-events-none"
                             draggable={false}
+                            sizes="(max-width: 768px) 100vw, 42rem"
                           />
                         </button>
                       ))
@@ -298,10 +259,12 @@ export default function Projects() {
                 <X size={24} strokeWidth={2} />
               </button>
               <div className="inline-block p-4 align-top" onClick={(e) => e.stopPropagation()}>
-                <img
-                  data-fullsize
+                <Image
                   src={expandedImage.url}
                   alt={expandedImage.alt}
+                  width={1920}
+                  height={1080}
+                  unoptimized
                   className="block"
                   style={{
                     width: 'auto',

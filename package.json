@@ -12,11 +12,12 @@
     "deploy": "npm run build && node scripts/ensure-nojekyll.js && npx gh-pages -d out --dotfiles -r https://github.com/tin365/jen-remodeling-inc.git"
   },
   "dependencies": {
+    "@sentry/nextjs": "^10.39.0",
+    "@supabase/supabase-js": "^2.45.0",
     "lucide-react": "^0.563.0",
     "next": "^15.1.0",
     "react": "^19.2.4",
-    "react-dom": "^19.2.4",
-    "@supabase/supabase-js": "^2.45.0"
+    "react-dom": "^19.2.4"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",
