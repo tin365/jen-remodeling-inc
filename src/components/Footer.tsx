@@ -1,10 +1,20 @@
 import React from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function Footer() {
   return (
     <footer className="bg-paper border-t border-rule py-6 sm:py-8 px-4 sm:px-6 mt-8">
       <div className="max-w-content mx-auto text-center">
+        <Link href="/" className="inline-flex justify-center mb-4" aria-label="JEN Remodeling Inc home">
+          <Image
+            src="/image.png"
+            alt="JEN Remodeling Inc"
+            width={1152}
+            height={2048}
+            className="h-20 sm:h-24 w-auto block opacity-95"
+          />
+        </Link>
         <p className="text-sm text-ink-light m-0">
           &copy; 2026 JEN Remodeling Inc. All rights reserved.
         </p>

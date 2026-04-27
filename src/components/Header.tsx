@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 
 const navLinks = [
@@ -18,18 +19,26 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-[1000] border-b-2 border-ink bg-paper">
-      <div className="max-w-content mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
-        <h1 className="text-xl sm:text-2xl font-bold tracking-tight m-0">
+      <div className="max-w-content mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-4">
+        <h1 className="m-0 shrink-0">
           <Link
             href="/"
-            className="text-ink no-underline hover:underline"
+            className="block no-underline"
             onClick={() => setMenuOpen(false)}
+            aria-label="JEN Remodeling Inc home"
           >
-            JEN Remodeling Inc
+            <Image
+              src="/image.png"
+              alt="JEN Remodeling Inc"
+              width={1152}
+              height={2048}
+              priority
+              className="h-16 sm:h-20 w-auto block"
+            />
           </Link>
         </h1>
         {/* Desktop nav */}
-        <nav className="hidden sm:block">
+        <nav className="hidden sm:block flex-1">
           <ul className="list-none p-0 m-0 flex flex-wrap gap-6">
             {navLinks.map((link) => (
               <li key={link.href}>
