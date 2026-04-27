@@ -16,7 +16,7 @@ export default function Footer() {
             alt="JEN Remodeling Inc"
             width={1152}
             height={2048}
-            className="h-20 sm:h-24 w-auto block opacity-95"
+            className="block w-[160px] h-[52px] sm:w-[210px] sm:h-[66px] object-cover object-[center_72%] opacity-95"
           />
         </Link>
         <p className="text-sm text-ink-light m-0">

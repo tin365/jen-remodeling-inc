@@ -23,7 +23,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-[1000] border-b-2 border-ink bg-paper">
-      <div className="max-w-content mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-4">
+      <div className="max-w-content mx-auto px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between gap-6">
         <h1 className="m-0 shrink-0">
           <Link
             href="/"
@@ -37,18 +37,18 @@ export default function Header() {
               width={1152}
               height={2048}
               priority
-              className="h-16 sm:h-20 w-auto block"
+              className="block w-[136px] h-[44px] sm:w-[182px] sm:h-[58px] object-cover object-[center_72%]"
             />
           </Link>
         </h1>
         {/* Desktop nav */}
         <nav className="hidden sm:block flex-1">
-          <ul className="list-none p-0 m-0 flex flex-wrap gap-6">
+          <ul className="list-none p-0 m-0 flex flex-wrap gap-8 items-center justify-end">
             {navLinks.map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className={`text-sm no-underline text-ink hover:underline decoration-2 ${pathname === link.href ? 'underline decoration-2' : ''}`}
+                  className={`text-[0.95rem] no-underline text-ink hover:underline decoration-2 ${pathname === link.href ? 'underline decoration-2' : ''}`}
                 >
                   {link.label}
                 </Link>
