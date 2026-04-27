@@ -2,13 +2,17 @@ import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 
+const logoSrc = process.env.NODE_ENV === 'production'
+  ? '/jen-remodeling-inc/image.png'
+  : '/image.png'
+
 export default function Footer() {
   return (
     <footer className="bg-paper border-t border-rule py-6 sm:py-8 px-4 sm:px-6 mt-8">
       <div className="max-w-content mx-auto text-center">
         <Link href="/" className="inline-flex justify-center mb-4" aria-label="JEN Remodeling Inc home">
           <Image
-            src="/image.png"
+            src={logoSrc}
             alt="JEN Remodeling Inc"
             width={1152}
             height={2048}

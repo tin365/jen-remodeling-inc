@@ -13,6 +13,10 @@ const navLinks = [
   { href: '/contact', label: 'Contact' },
 ]
 
+const logoSrc = process.env.NODE_ENV === 'production'
+  ? '/jen-remodeling-inc/image.png'
+  : '/image.png'
+
 export default function Header() {
   const pathname = usePathname()
   const [menuOpen, setMenuOpen] = useState(false)
@@ -28,7 +32,7 @@ export default function Header() {
             aria-label="JEN Remodeling Inc home"
           >
             <Image
-              src="/image.png"
+              src={logoSrc}
               alt="JEN Remodeling Inc"
               width={1152}
               height={2048}
