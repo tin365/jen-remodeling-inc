@@ -19,7 +19,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-[1000] border-b-2 border-ink bg-paper">
-      <div className="max-w-content mx-auto px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between gap-6">
+      <div className="max-w-[1220px] mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-5 flex items-center justify-between gap-6 lg:gap-8">
         <h1 className="m-0 shrink-0">
           <Link
             href="/"
@@ -29,18 +29,18 @@ export default function Header() {
           >
             <BrandLogo
               variant="primary"
-              className="w-[196px] h-[54px] sm:w-[248px] sm:h-[64px]"
+              className="w-[188px] h-[52px] sm:w-[208px] sm:h-[56px] xl:w-[226px] xl:h-[60px]"
             />
           </Link>
         </h1>
         {/* Desktop nav */}
-        <nav className="hidden sm:block flex-1">
-          <ul className="list-none p-0 m-0 flex flex-wrap gap-8 items-center justify-end">
+        <nav className="hidden lg:block flex-1 min-w-0">
+          <ul className="list-none p-0 m-0 flex items-center justify-end gap-6 xl:gap-8 whitespace-nowrap">
             {navLinks.map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className={`text-[0.95rem] no-underline text-ink hover:underline decoration-2 ${pathname === link.href ? 'underline decoration-2' : ''}`}
+                  className={`text-[0.92rem] xl:text-[0.96rem] no-underline text-ink hover:underline decoration-2 ${pathname === link.href ? 'underline decoration-2' : ''}`}
                 >
                   {link.label}
                 </Link>
@@ -52,7 +52,7 @@ export default function Header() {
         <button
           type="button"
           onClick={() => setMenuOpen(!menuOpen)}
-          className="sm:hidden p-2 -mr-2 text-ink"
+          className="lg:hidden p-2 -mr-2 text-ink"
           aria-label="Toggle navigation"
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -64,7 +64,7 @@ export default function Header() {
       </div>
       {/* Mobile menu */}
       {menuOpen && (
-        <nav className="sm:hidden border-t border-ink/20 bg-paper">
+        <nav className="lg:hidden border-t border-ink/20 bg-paper">
           <ul className="list-none p-0 m-0">
             {navLinks.map((link) => (
               <li key={link.href} className="border-b border-ink/10 last:border-b-0">
