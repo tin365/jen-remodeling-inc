@@ -18,12 +18,6 @@ vi.mock('next/link', () => ({
   ),
 }))
 
-vi.mock('next/image', () => ({
-  default: ({ alt, priority: _priority, ...props }: React.ImgHTMLAttributes<HTMLImageElement> & { priority?: boolean }) => (
-    <img alt={alt} {...props} />
-  ),
-}))
-
 describe('Header', () => {
   beforeEach(() => {
     mockPathname = '/'
@@ -34,7 +28,7 @@ describe('Header', () => {
     render(<Header />)
 
     const projectsLink = screen.getByRole('link', { name: /projects/i })
-    const homeLink = screen.getByRole('link', { name: /home/i })
+    const homeLink = screen.getByRole('link', { name: /^Home$/i })
 
     // Active link should have a different className than inactive link
     expect(projectsLink.className).not.toBe(homeLink.className)
@@ -45,7 +39,7 @@ describe('Header', () => {
     render(<Header />)
 
     const toggleButton = screen.getByRole('button', { name: /toggle navigation/i })
-    // Initial render should only have one "Contact" link (in the main header)
+    // Initial render should only have one "Contact" link visible (desktop nav)
     expect(screen.getAllByRole('link', { name: /contact/i }).length).toBe(1)
 
     await user.click(toggleButton)

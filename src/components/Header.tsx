@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import { usePathname } from 'next/navigation'
+import BrandLogo from './BrandLogo'
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -12,10 +12,6 @@ const navLinks = [
   { href: '/reviews', label: 'Reviews' },
   { href: '/contact', label: 'Contact' },
 ]
-
-const logoSrc = process.env.NODE_ENV === 'production'
-  ? '/jen-remodeling-inc/image.png'
-  : '/image.png'
 
 export default function Header() {
   const pathname = usePathname()
@@ -31,13 +27,9 @@ export default function Header() {
             onClick={() => setMenuOpen(false)}
             aria-label="JEN Remodeling Inc home"
           >
-            <Image
-              src={logoSrc}
-              alt="JEN Remodeling Inc"
-              width={1152}
-              height={2048}
-              priority
-              className="block w-[136px] h-[44px] sm:w-[182px] sm:h-[58px] object-cover object-[center_72%]"
+            <BrandLogo
+              variant="primary"
+              className="w-[196px] h-[54px] sm:w-[248px] sm:h-[64px]"
             />
           </Link>
         </h1>

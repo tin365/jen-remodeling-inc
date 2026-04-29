@@ -6,9 +6,9 @@ import Footer from './Footer'
 
 export default function LayoutSwitcher({ children }: { children: React.ReactNode }) {
   const pathname = usePathname() ?? ''
-  const isAdmin = pathname.includes('/admin')
+  const isChromeLess = pathname.includes('/admin') || pathname.includes('/brand-preview')
 
-  if (isAdmin) {
+  if (isChromeLess) {
     return <>{children}</>
   }
 
